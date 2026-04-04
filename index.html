@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>True American Stories</title>
+<style>
+body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+header { background: #333; color: #fff; padding: 20px; text-align: center; }
+#search { width: 80%; padding: 10px; margin: 20px auto; display: block; border-radius: 5px; border: 1px solid #ccc; }
+#categories { text-align: center; margin-bottom: 20px; }
+.category-btn { padding: 8px 15px; margin: 0 5px; border: none; border-radius: 5px; background: #555; color: white; cursor: pointer; }
+.category-btn:hover { background: #333; }
+#stories { max-width: 900px; margin: 0 auto; padding: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; }
+.story { background: #fff; margin-bottom: 20px; padding: 15px; border-radius: 5px; box-shadow: 0 0 5px rgba(0,0,0,0.1); width: 48%; box-sizing: border-box; }
+.story img { width: 100%; border-radius: 5px; }
+.story h2 { margin-top: 0; color: #222; }
+.story p { line-height: 1.5; color: #555; }
+.read-more { display: inline-block; margin-top: 10px; padding: 5px 10px; background: #333; color: #fff; text-decoration: none; border-radius: 5px; }
+.read-more:hover { background: #555; }
+@media(max-width:700px) { .story { width: 100%; } }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>True American Stories</h1>
+</header>
+
+<input type="text" id="search" placeholder="Search stories...">
+
+<div id="categories">
+  <button class="category-btn" data-category="All">All</button>
+  <button class="category-btn" data-category="Crime">Crime</button>
+  <button class="category-btn" data-category="Mystery">Mystery</button>
+  <button class="category-btn" data-category="Disaster">Disaster</button>
+  <button class="category-btn" data-category="Horror">Horror</button>
+</div>
+
+<div id="stories">
+
+<!-- Example Story 1 -->
+<div class="story" data-category="Crime">
+  <img src="images/story1.jpg" alt="Alcatraz Escape">
+  <h2>Escape from Alcatraz — June 11, 1962</h2>
+  <p>Three inmates escaped from Alcatraz Federal Penitentiary in San Francisco Bay. Using handmade tools, they dug through walls and created dummy heads to fool guards. They were never found, and their fate remains a mystery.</p>
+  <a href="#story1" class="read-more">Read More</a>
+</div>
+
+<!-- Example Story 2 -->
+<div class="story" data-category="Disaster">
+  <img src="images/story2.jpg" alt="Blizzard 1888">
+  <h2>The Great Blizzard — March 11–14, 1888</h2>
+  <p>A devastating snowstorm hit the northeastern United States, burying towns under feet of snow. Thousands were stranded, trains stalled, and hundreds lost their lives. It remains one of the deadliest weather disasters in U.S. history.</p>
+  <a href="#story2" class="read-more">Read More</a>
+</div>
+
+<!-- Example Story 3 -->
+<div class="story" data-category="Disaster">
+  <img src="images/story3.jpg" alt="Molasses Flood">
+  <h2>The Great Molasses Flood — January 15, 1919</h2>
+  <p>A massive tank of molasses in Boston burst, sending a wave over the streets. 21 people died, many were injured, and the sticky aftermath lingered for months.</p>
+  <a href="#story3" class="read-more">Read More</a>
+</div>
+
+<!-- Example Story 4 -->
+<div class="story" data-category="Crime">
+  <img src="images/story4.jpg" alt="Lindbergh Kidnapping">
+  <h2>The Lindbergh Kidnapping — March 1, 1932</h2>
+  <p>The son of aviator Charles Lindbergh was kidnapped from his home. Despite paying the ransom, the child was found dead weeks later. The case became one of America's most notorious mysteries.</p>
+  <a href="#story4" class="read-more">Read More</a>
+</div>
+
+<!-- Example Story 5 -->
+<div class="story" data-category="Mystery">
+  <img src="images/story5.jpg" alt="Zodiac Killer">
+  <h2>The Zodiac Killer — 1968–1974</h2>
+  <p>A serial killer in Northern California sent cryptic codes to newspapers and taunted police. He was never caught, and his identity remains unknown.</p>
+  <a href="#story5" class="read-more">Read More</a>
+</div>
+
+<!-- Story 6 to 30: Repeat the same structure with proper categories and images -->
+
+</div>
+
+<script>
+// Search function
+document.getElementById("search").addEventListener("keyup", function() {
+  let input = this.value.toLowerCase();
+  let stories = document.getElementsByClassName("story");
+  for (let s of stories) {
+    s.style.display = s.innerText.toLowerCase().includes(input) ? "block" : "none";
+  }
+});
+
+// Category filter
+let categoryButtons = document.getElementsByClassName("category-btn");
+for (let btn of categoryButtons) {
+  btn.addEventListener("click", function() {
+    let category = this.getAttribute("data-category");
+    let stories = document.getElementsByClassName("story");
+    for (let s of stories) {
+      s.style.display = (category === "All" || s.getAttribute("data-category") === category) ? "block" : "none";
+    }
+  });
+}
+</script>
+
+</body>
+  </html>
