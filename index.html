@@ -2,352 +2,825 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Stories</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Story Website</title>
 <style>
-body { font-family: Arial; background:#111; color:white; margin:0; }
-.container { padding:20px; max-width:1000px; margin:auto; }
-.story { background:#222; padding:15px; margin:10px 0; border-radius:10px; }
-img { width:100%; max-width:400px; height:200px; object-fit:cover; border-radius:8px; }
-.full { display:none; margin-top:10px; }
-button { margin-top:10px; padding:6px 10px; background:#555; color:white; border:none; cursor:pointer; border-radius:5px; }
-button:hover { background:#777; }
-#search { width:100%; padding:10px; margin-bottom:20px; border-radius:5px; border:none; }
+body {
+    font-family: Arial, sans-serif;
+    background:#111;
+    color:white;
+    margin:0;
+    font-size:18px;
+}
+
+.container {
+    max-width:1000px;
+    margin:auto;
+    padding:20px;
+}
+
+#search {
+    width:100%;
+    padding:12px;
+    margin-bottom:20px;
+    border-radius:5px;
+    border:none;
+    font-size:16px;
+}
+
+.story {
+    background:#222;
+    padding:20px;
+    margin:15px 0;
+    border-radius:10px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.story img {
+    width:100%;
+    max-width:450px;
+    height:250px;
+    object-fit:cover;
+    border-radius:8px;
+    align-self:center;
+}
+
+.story h2 {
+    font-size:26px;
+    margin:0;
+}
+
+.story p {
+    margin:5px 0;
+    line-height:1.6;
+    font-size:18px;
+}
+
+.story .full {
+    display:none;
+    margin-top:8px;
+}
+
+.story button {
+    padding:8px 12px;
+    background:#555;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    font-size:16px;
+    align-self:flex-start;
+}
+
+.story button:hover {
+    background:#777;
+}
 </style>
 </head>
 <body>
 
-<div class="container">
-<h1>Stories</h1>
+<input type="text" id="search" placeholder="Search stories...">
 
-<input id="search" placeholder="Search..." onkeyup="searchStories()">
-
-<div id="stories"></div>
-</div>
+<div class="container" id="storyContainer"></div>
 
 <script>
 const storyData = [
 {
 number: 1,
-title:"The Quiet Student",
-image:"https://source.unsplash.com/400x300/?books,library",
-shortDesc:"A quiet boy nobody noticed.",
-fullDesc:"There was a boy who sat in the last row of the class. He never spoke, never asked questions, and never caused problems. Everyone thought he was weak or unintelligent.\n\nBut the truth was completely different. He observed everything. He understood more than anyone else. One day, when the teacher asked a difficult question, nobody answered. The quiet student raised his hand and solved it perfectly.\n\nFrom that day, people started to see him differently."
+title: "The Quiet Student",
+image: "https://source.unsplash.com/400x300/?books,study",
+shortDesc: "Oliver, a shy student, struggled to find his voice.",
+fullDesc: "On March 12, 2024, Oliver sat quietly in the corner of Lincoln High's library, observing his classmates as they chatted and laughed. Unlike them, he had always preferred the company of books, spending hours reading about history, science, and the stories of people who changed the world. Over the weeks, he meticulously planned a science project about renewable energy, jotting notes and diagrams in his notebook. On the day of the presentation, his nervousness was palpable, but when he started explaining his ideas about sustainable solar panels, even his skeptical teacher, Mrs. Thompson, was impressed. This marked the beginning of Oliver realizing that patience, observation, and preparation could turn him into someone respected and heard."
 },
 {
 number: 2,
-title:"The Fear of Failure",
-image:"https://source.unsplash.com/400x300/?brain,knowledge",
-shortDesc:"A smart student held back by fear.",
-fullDesc:"Kevin knew he was intelligent, but he was always afraid to try. Every time an opportunity came, he avoided it because he feared failure. Over time, his classmates surpassed him, not because they were smarter, but because they took risks.\n\nOne day, Kevin had no choice. He was forced into a competition. Nervous and uncertain, he gave it everything he had. He didn’t win—but for the first time, he realized failure wasn’t the end. It was the beginning."
+title: "The Fear of Failure",
+image: "https://source.unsplash.com/400x300/?challenge,fear",
+shortDesc: "Liam constantly feared failing, until one event changed everything.",
+fullDesc: "Liam had always feared failure, remembering the embarrassing mistake he made in the 7th grade math competition on April 3, 2022. Since then, he avoided challenges, preferring safe and easy tasks. But in September 2023, his history teacher assigned a group project that required leadership, research, and a public presentation. Liam was hesitant, but he decided to face his fear. Every evening, he stayed up late reading historical documents and drafting speeches. On presentation day, he stood before the class and delivered a detailed explanation about the Industrial Revolution, adding facts and stories about inventors and workers. His confidence grew, and classmates approached him after class asking for tips. Liam finally realized that failure was not a punishment, but a stepping stone to learning."
 },
 {
 number: 3,
-title:"The Hidden Potential",
-image:"https://source.unsplash.com/400x300/?school,classroom",
-shortDesc:"Talents hidden from everyone.",
-fullDesc:"Mia was overlooked in every class. Teachers and students assumed she was average. Yet she had a secret skill in problem solving and creative thinking.\n\nDuring a school project, she revealed her hidden potential and amazed everyone. She learned that sometimes the world doesn’t see your abilities until you show them."
+title: "The Hidden Observer",
+image: "https://source.unsplash.com/400x300/?observe,focus",
+shortDesc: "Ethan noticed details no one else did, changing the outcome.",
+fullDesc: "Ethan had always been quiet, preferring to observe instead of participate. On October 15, 2023, during the school's annual science fair, he noticed a small misalignment in the wiring of a friend's experiment. While others ignored it, Ethan carefully documented each issue and suggested minor corrections. The presentation went smoothly, and his friend's project won first place. Ethan realized that paying attention to details and being patient could make a huge difference, even if no one immediately noticed his contributions."
 },
 {
 number: 4,
-title:"The Turning Point",
-image:"https://source.unsplash.com/400x300/?change,life",
-shortDesc:"One moment changed everything.",
-fullDesc:"For years, nothing in Ryan’s life changed. Same routine, same failures, same excuses. Until one day, something small happened—a missed opportunity that could have changed his future.\n\nThat moment hit him hard. He realized he was the reason he was stuck. From that day forward, he changed his habits, his mindset, and his actions. Slowly, his life followed."
+title: "The Persistent Achiever",
+image: "https://source.unsplash.com/400x300/?persistence,success",
+shortDesc: "Noah struggled initially but persisted until he succeeded.",
+fullDesc: "Noah had always struggled with math. On January 8, 2024, he failed his first major algebra test, feeling utterly defeated. But instead of giving up, he created a study schedule, revisiting each concept carefully, and seeking help from his tutor every weekend. Over the next three months, his grades steadily improved. By April 12, 2024, Noah aced his final exam, surprising not only his peers but also himself. His journey taught him that consistency, hard work, and determination were more important than innate talent."
 },
 {
 number: 5,
-title:"The Observer",
-image:"https://source.unsplash.com/400x300/?observe,focus",
-shortDesc:"Watching instead of speaking.",
-fullDesc:"Liam was never the loudest person in the room. Instead, he watched. He noticed patterns, behaviors, and small details others missed.\n\nOver time, he began understanding people better than they understood themselves. While others relied on strength or popularity, Liam used knowledge. And knowledge made him powerful."
-},
-{
-number: 6,
-title:"The Unexpected Winner",
-image:"https://source.unsplash.com/400x300/?success,win",
-shortDesc:"No one believed in him.",
-fullDesc:"Noah was always underestimated. People laughed when he joined competitions. They saw him as average, nothing more.\n\nBut Noah trained quietly. Day after day, he improved. When the final competition arrived, he surprised everyone—not just by winning, but by dominating. Sometimes, the strongest people are the ones no one notices."
-},
-{
-number: 7,
-title:"The Double Life",
-image:"https://source.unsplash.com/400x300/?secret,abstract",
-shortDesc:"Two completely different identities.",
-fullDesc:"Emma lived two lives. In school, she was shy and quiet. Online, she was confident and expressive.\n\nOver time, those two worlds began to collide. Emma had to decide which version of herself was real—and which one she wanted to become."
-},
-{
-number: 8,
-title:"The Silent Challenge",
-image:"https://source.unsplash.com/400x300/?challenge,success",
-shortDesc:"Proving without speaking.",
-fullDesc:"Jake was always challenged by others, but he never argued back. Instead, he focused on improving himself.\n\nOne day, when it mattered most, he proved everything without saying a single word. Actions spoke louder than anything he could have said."
-},
-{
-number: 9,
-title:"The Real Genius",
-image:"https://source.unsplash.com/400x300/?smart,intelligent",
-shortDesc:"Intelligence is not always visible.",
-fullDesc:"Many people think intelligence is loud, fast, and obvious. But true intelligence is quiet. It observes, adapts, and acts when needed.\n\nThose who understand this don’t need to prove themselves. Their results speak for them."
-},
-{
-number: 10,
-title:"The Late Bloomer",
-image:"https://source.unsplash.com/400x300/?growth,development",
-shortDesc:"Starting late but achieving greatness.",
-fullDesc:"Sophia never excelled early in school. She struggled with simple tasks while others succeeded. Yet she never gave up. Over time, her patience, practice, and persistence paid off. By the end of her school years, she became one of the top students."
-},
-{
-number: 11,
-title:"The Creative Mind",
-image:"https://source.unsplash.com/400x300/?creativity,idea",
-shortDesc:"A mind full of ideas.",
-fullDesc:"Oliver had a head full of ideas, but rarely shared them. Teachers overlooked him because he seemed quiet. One day, a project required innovation, and Oliver revealed his creativity. His solution amazed everyone and changed the way projects were done in class."
-},
-{
-number: 12,
-title:"The Persistent Learner",
-image:"https://source.unsplash.com/400x300/?books,study",
-shortDesc:"Never stopping, never giving up.",
-fullDesc:"Hannah struggled at first with mathematics. Numbers seemed impossible. But she studied every day, asked questions, and practiced relentlessly. Eventually, she not only passed, but also helped classmates who were still struggling."
-},
-{
-number: 13,
-title:"The Problem Solver",
-image:"https://source.unsplash.com/400x300/?puzzle,logic",
-shortDesc:"Solving what others cannot.",
-fullDesc:"Ethan loved puzzles. While classmates ignored complex problems, he focused on solutions. One day, a difficult problem in class stumped everyone. Ethan calmly solved it, earning respect and admiration."
-},
-{
-number: 14,
-title:"The Risk Taker",
-image:"https://source.unsplash.com/400x300/?risk,challenge",
-shortDesc:"Stepping out of comfort zones.",
-fullDesc:"Lily always played it safe. One opportunity required courage—she took it. Even though it was risky, the experience taught her more than any safe choice could. She learned to trust herself."
-},
-{
-number: 15,
-title:"The Observer of Details",
-image:"https://source.unsplash.com/400x300/?details,focus",
-shortDesc:"Small details, big impact.",
-fullDesc:"Max noticed what others ignored. A misaligned desk, a forgotten step, a small hint in a problem. Using these observations, he solved a class project flawlessly, proving attention to detail matters."
-},
-{
-number: 16,
-title:"The Patient One",
-image:"https://source.unsplash.com/400x300/?time,patience",
-shortDesc:"Slow and steady wins the race.",
-fullDesc:"Anna struggled with writing essays at first. But day by day, she improved. Her patience and persistence led to top grades, showing that consistency beats speed."
-},
-{
-number: 17,
-title:"The Mentor in Disguise",
-image:"https://source.unsplash.com/400x300/?books,learning",
-shortDesc:"Learning from unexpected people.",
-fullDesc:"Lucas thought learning came only from teachers. A classmate showed him a new method of understanding history. Lucas realized knowledge can come from anyone, not just authority."
-},
-{
-number: 18,
-title:"The Fearless Decision",
-image:"https://source.unsplash.com/400x300/?decision,choice",
-shortDesc:"Choosing courage over safety.",
-fullDesc:"Ella avoided risks her whole life. One day, she had to choose: play it safe or take a chance. She chose the chance, and even with mistakes, she grew stronger and more confident."
-},
-{
-number: 19,
-title:"The Hidden Strength",
-image:"https://source.unsplash.com/400x300/?strength,hidden",
-shortDesc:"Strength is not always visible.",
-fullDesc:"Mason looked weak in appearance but had incredible inner strength. When challenges came, he used strategy, intelligence, and patience to overcome obstacles that seemed impossible."
-},
-{
-number: 20,
-title:"The Final Realization",
-image:"https://source.unsplash.com/400x300/?knowledge,light",
-shortDesc:"Understanding life and self.",
-fullDesc:"After years of confusion, mistakes, and failures, Oliver finally understood: life isn’t about perfection, but about learning, adapting, and continuing. This clarity changed his approach completely."
+title: "The Bold Experimenter",
+image: "https://source.unsplash.com/400x300/?experiment,science",
+shortDesc: "Oliver risked new methods and discovered success.",
+fullDesc: "Oliver had always been curious about chemistry. On February 20, 2024, he decided to try a new method for his project on chemical reactions. Despite warnings from his peers, he carefully set up his experiment, documenting every step with precision. His reaction produced unexpected results that led him to a new observation about catalysts. During the class demonstration, his teacher, Mr. Daniels, praised his innovative approach, and other students were eager to try his method. Oliver realized that taking calculated risks and embracing experimentation was key to discovering new knowledge."
 }
 ];
 storyData.push(
 {
+number: 6,
+title: "The Unexpected Mentor",
+image: "https://source.unsplash.com/400x300/?mentor,learning",
+shortDesc: "Emma found guidance from an unlikely source.",
+fullDesc: "On March 5, 2024, Emma struggled to complete her robotics project. Feeling frustrated, she wandered into the school's workshop and met Mr. Carter, the janitor, who had a background in engineering. Surprisingly, he offered her advice on improving the design and suggested new materials. Following his guidance, Emma rebuilt the robot, adding gears and sensors she had never used before. The next week, her project not only worked flawlessly but won the regional science fair. Emma realized inspiration and knowledge can come from the most unexpected places."
+},
+{
+number: 7,
+title: "The Midnight Writer",
+image: "https://source.unsplash.com/400x300/?writing,notebook",
+shortDesc: "Lucas discovered his talent during late-night sessions.",
+fullDesc: "Lucas had always been fascinated by storytelling. On April 14, 2024, he stayed up until 2 a.m., writing in his notebook by the dim light of a desk lamp. He wrote about adventures in distant lands, characters overcoming impossible odds, and lessons learned through hardship. Over weeks, these midnight sessions became a ritual. By May, Lucas compiled a 50-page story filled with complex characters, plot twists, and vivid descriptions. His English teacher, Mrs. Grant, encouraged him to submit it to a national writing contest. The experience taught Lucas the power of dedication and late-night creativity."
+},
+{
+number: 8,
+title: "The Lost Map",
+image: "https://source.unsplash.com/400x300/?map,adventure",
+shortDesc: "Sophie found a mysterious map that changed her summer.",
+fullDesc: "On June 21, 2024, Sophie stumbled upon an old map in her grandfather's attic. The map depicted a hidden trail through the forest behind her town, marked with symbols she couldn't decipher. Intrigued, she gathered a few friends and set out to follow it. Each step brought new challenges: crossing a small creek, climbing over fallen trees, and solving cryptic symbols etched into stones. After hours of exploration, they discovered a hidden grove filled with wildflowers and a small spring. Sophie documented everything in her journal, realizing that curiosity, courage, and teamwork could uncover wonders even in familiar places."
+},
+{
+number: 9,
+title: "The Science Fair Rivalry",
+image: "https://source.unsplash.com/400x300/?science,experiment",
+shortDesc: "Rival students pushed each other to excellence.",
+fullDesc: "In September 2023, the annual science fair at Lincoln High sparked a fierce rivalry between Mia and Jason. Both were determined to create the most impressive project. Mia focused on renewable energy, building a model of a solar-powered water purifier, while Jason experimented with eco-friendly batteries. Weeks of trials, failures, and late-night work ensued. On presentation day, both projects impressed the judges, and although only one could win first place, they both gained recognition. The rivalry taught them respect, perseverance, and the value of pushing each other toward excellence."
+},
+{
+number: 10,
+title: "The Music of Patience",
+image: "https://source.unsplash.com/400x300/?music,piano",
+shortDesc: "Lily learned life lessons through mastering the piano.",
+fullDesc: "On February 10, 2024, Lily sat in front of a grand piano in her music room, frustrated by her inability to play a complex classical piece. Her teacher, Mr. Hughes, encouraged her to practice slowly, focusing on each hand separately. For weeks, Lily spent hours every day, gradually improving. By March 15, she could perform the piece flawlessly in front of her family. The experience taught her patience, discipline, and the joy of incremental progress. Music became not just an art for her, but a reflection of how persistence in life could lead to mastery and personal growth."
+}
+);
+storyData.push(
+{
+number: 11,
+title: "The Secret Garden Discovery",
+shortDesc: "Maya stumbled upon a hidden garden behind her school.",
+fullDesc: "On April 2, 2024, Maya noticed a small gate behind the old school gym that she had never seen before. Curious, she pushed it open and discovered a secret garden filled with colorful flowers, herbs, and a small pond. Over the next few weeks, she visited daily, documenting the growth of each plant and sketching the scene in her notebook. The garden became a place of reflection and inspiration for her art projects, and she even convinced a few classmates to help maintain it. Maya realized that sometimes the most beautiful discoveries are hidden in plain sight."
+},
+{
+number: 12,
+title: "The Forgotten Letter",
+shortDesc: "Ethan found a letter that changed his understanding of his grandfather.",
+fullDesc: "On March 18, 2024, Ethan was cleaning his attic when he discovered an old, dusty envelope addressed to his grandfather, dated 1962. Inside was a heartfelt letter revealing a secret friendship and unfulfilled dreams. Ethan spent days piecing together the story from other old letters and photographs. The experience made him appreciate his grandfather's resilience and taught him the value of documenting memories. Ethan decided to write a biography that would honor the past and share lessons with the next generation."
+},
+{
+number: 13,
+title: "The Winter Rescue",
+shortDesc: "A snowstorm challenged Alex and his team to save a stranded traveler.",
+fullDesc: "On January 15, 2024, Alex and his volunteer rescue team received a distress call about a hiker stranded on the northern ridge. The snowstorm had worsened, and visibility was nearly zero. Equipped with GPS, ropes, and warm gear, Alex led the team carefully across the icy path. After hours of careful navigation, they found the hiker, exhausted but unharmed. The successful rescue not only reinforced the importance of teamwork and preparation but also gave Alex a deep sense of purpose in helping others during critical times."
+},
+{
+number: 14,
+title: "The Inventor's Challenge",
+shortDesc: "Sophia competed in a national robotics competition with her innovative design.",
+fullDesc: "Sophia had been preparing for months for the National Robotics Challenge held on May 10, 2024. Her robot was designed to sort recyclable materials autonomously. She faced multiple setbacks, including motor failures and coding bugs, which she meticulously solved one by one. During the competition, her robot performed flawlessly, impressing both the judges and other participants. Sophia's dedication, problem-solving skills, and creative thinking earned her first place and recognition as a promising young inventor."
+},
+{
+number: 15,
+title: "The Old Library Secret",
+shortDesc: "Liam uncovered hidden manuscripts in the town library.",
+fullDesc: "While volunteering at the town library on June 8, 2024, Liam discovered a concealed compartment behind a bookshelf. Inside were fragile manuscripts detailing forgotten local legends and historical events. Liam carefully cataloged each manuscript and shared the findings with the town historian. His research sparked renewed interest in the town's heritage and led to a local exhibit. Liam learned that curiosity and persistence could reveal treasures that many had overlooked for decades."
+},
+{
+number: 16,
+title: "The Courageous Debate",
+shortDesc: "A high school debate team overcame nervousness to win.",
+fullDesc: "On February 25, 2024, the debate team at Lincoln High faced a challenging regional competition. Jenna, the youngest member, was initially terrified to speak in front of a large audience. With guidance from her coach and daily practice sessions, she gradually built confidence. During the final round, she delivered a compelling argument on environmental policy, earning applause from both judges and peers. The team won the competition, and Jenna realized that courage is built through preparation, practice, and the willingness to step outside one's comfort zone."
+},
+{
+number: 17,
+title: "The Hidden Talent",
+shortDesc: "Aiden discovered his passion for painting unexpectedly.",
+fullDesc: "On August 12, 2024, during a summer art workshop, Aiden reluctantly picked up a brush, expecting little to come of it. As he experimented with colors and textures, he realized an innate ability to capture emotions on canvas. Encouraged by his mentor, he continued practicing daily. By the end of the summer, Aiden held a small exhibition featuring his paintings, receiving praise from local artists and friends. This experience taught him that hidden talents often appear when we least expect them, and nurturing them can lead to personal fulfillment."
+},
+{
+number: 18,
+title: "The Midnight Rescue",
+shortDesc: "A late-night call led Clara to help an injured animal.",
+fullDesc: "On September 5, 2024, Clara heard a distress call about an injured fox near the outskirts of town. Despite it being midnight, she grabbed her first-aid kit and headed out. Carefully approaching the animal, she managed to stabilize it and transport it safely to a wildlife rehabilitation center. Over the next few days, Clara learned about wildlife care and the challenges of rescuing injured animals. The experience instilled in her a profound respect for nature and the responsibility humans have in protecting it."
+},
+{
+number: 19,
+title: "The Unexpected Journey",
+shortDesc: "A family trip led to an adventure that changed their perspective.",
+fullDesc: "During a summer vacation in July 2024, the Rivera family took a detour from their planned route and discovered a small mountain village not listed in guidebooks. They spent days exploring hidden trails, tasting local delicacies, and learning about traditional crafts. Each evening, they shared stories around a fire, strengthening family bonds. The experience taught them that sometimes the best journeys are those unplanned, and that curiosity can turn ordinary trips into unforgettable adventures."
+},
+{
+number: 20,
+title: "The First Marathon",
+shortDesc: "Daniel trained for months to complete his first marathon.",
+fullDesc: "Daniel had always been active, but running a marathon seemed impossible. Beginning in January 2024, he followed a strict training schedule, gradually increasing distance and endurance. Each week brought new challenges: sore muscles, fatigue, and moments of doubt. By April 20, 2024, Daniel crossed the finish line of his first marathon, exhausted but exhilarated. The experience taught him discipline, resilience, and the joy of achieving a long-term goal through consistent effort and determination."
+}
+);
+storyData.push(
+{
 number: 21,
-title:"The Creative Spark",
-image:"https://source.unsplash.com/400x300/?creativity,idea",
-shortDesc:"A small idea becomes something big.",
-fullDesc:"Sophia had an idea for a project but kept it to herself. Slowly, she nurtured it, researched, and experimented. Eventually, it turned into a successful solution that impressed teachers and classmates alike."
+title: "The Science Experiment Gone Wrong",
+shortDesc: "Mia's chemistry experiment took an unexpected turn.",
+fullDesc: "On March 11, 2024, Mia attempted to create a harmless chemical reaction for her school science project. Despite careful planning, one of the mixtures erupted unexpectedly, filling the lab with colorful smoke. Though initially panicked, Mia quickly followed safety procedures, ventilated the room, and learned from her mistake. Her teacher commended her for remaining calm under pressure. This incident taught Mia the importance of preparation, safety, and thinking quickly when facing unforeseen challenges."
 },
 {
 number: 22,
-title:"The Hidden Observer",
-image:"https://source.unsplash.com/400x300/?observe,focus",
-shortDesc:"Watching quietly makes you wise.",
-fullDesc:"Ethan was always quiet in class. He observed how people worked, how problems were solved, and noticed details no one else did. When the final project came, he applied his observations and achieved excellence."
+title: "The Art of Patience",
+shortDesc: "Ella learned that patience is key to mastering painting.",
+fullDesc: "Ella had always loved painting but struggled with details. On February 18, 2024, she decided to focus on a complex landscape painting. Every brushstroke required careful attention. Over several weeks, she worked daily, refining textures, shadows, and lighting. When the painting was finally complete, it captured the beauty of a sunset over a quiet lake. Ella realized that mastery in any craft comes from patience, persistence, and dedication."
 },
 {
 number: 23,
-title:"The Determined Mind",
-image:"https://source.unsplash.com/400x300/?books,study",
-shortDesc:"Persistence beats all obstacles.",
-fullDesc:"Lily struggled with her studies at first, often feeling left behind. But she committed herself to practice daily. Slowly, her understanding improved and she became one of the top students."
+title: "The Hidden Talent Show",
+shortDesc: "A surprise talent revealed at the school assembly.",
+fullDesc: "During the spring assembly on May 3, 2024, students were invited to showcase hidden talents. Liam, a reserved student, hesitated to participate. Encouraged by friends, he performed a piano piece he had been secretly practicing for months. His performance amazed everyone, earning a standing ovation. Liam discovered that sharing one's talents can inspire others and boost confidence, teaching him that sometimes stepping out of comfort zones leads to unexpected rewards."
 },
 {
 number: 24,
-title:"The Unexpected Leader",
-image:"https://source.unsplash.com/400x300/?leadership,team",
-shortDesc:"Leadership can come from anyone.",
-fullDesc:"No one expected Alex to lead the team. He was quiet and unassuming. But when the group faced a challenge, his calm guidance helped them succeed beyond expectations."
+title: "The Community Garden",
+shortDesc: "Neighbors worked together to create a flourishing garden.",
+fullDesc: "In June 2024, Sarah noticed an abandoned lot in her neighborhood. Inspired, she proposed transforming it into a community garden. Over the summer, residents of all ages joined her effort, planting flowers, vegetables, and fruit trees. Weekly workdays turned into social events, fostering stronger community bonds. By September, the garden was thriving, providing fresh produce and a peaceful retreat. Sarah learned that collaboration, vision, and persistence can transform neglected spaces into sources of joy and connection."
 },
 {
 number: 25,
-title:"The Thoughtful Planner",
-image:"https://source.unsplash.com/400x300/?planning,strategy",
-shortDesc:"Preparation is key.",
-fullDesc:"Mia always planned everything meticulously. When her school organized a competition, her careful preparation gave her an advantage others overlooked, leading to her success."
+title: "The Coding Challenge",
+shortDesc: "Ethan faced a tough programming competition.",
+fullDesc: "Ethan had been preparing for the national coding challenge since January 2024. On April 12, he encountered a particularly difficult algorithm problem that seemed impossible to solve. Spending hours debugging, researching, and testing solutions, he finally found an efficient approach just minutes before the submission deadline. Ethan's solution earned him second place nationally and taught him the value of perseverance, analytical thinking, and the importance of staying calm under pressure."
 },
 {
 number: 26,
-title:"The Curious Mind",
-image:"https://source.unsplash.com/400x300/?curiosity,learning",
-shortDesc:"Asking questions changes everything.",
-fullDesc:"Ryan constantly asked questions, even when others ignored him. His curiosity led to a deeper understanding of every subject and eventually became a source of inspiration for classmates."
+title: "The Unexpected Friendship",
+shortDesc: "Two classmates discovered shared interests despite differences.",
+fullDesc: "On March 7, 2024, Olivia and Noah, who had barely spoken in class, were paired for a science project. Initially awkward, they discovered shared interests in astronomy and robotics. Working late after school, they exchanged ideas, supported each other, and completed a successful project on renewable energy. Their unexpected friendship flourished, showing that collaboration and openness can break down social barriers and lead to meaningful relationships."
 },
 {
 number: 27,
-title:"The Quiet Genius",
-image:"https://source.unsplash.com/400x300/?intelligence,brain",
-shortDesc:"Smart people don’t always speak first.",
-fullDesc:"Daniel never raised his hand in class, preferring to think things through. When a difficult problem appeared, he calmly solved it, surprising everyone with his intelligence."
+title: "The Mountain Hike",
+shortDesc: "A challenging hike led to breathtaking views and self-discovery.",
+fullDesc: "On July 20, 2024, a group of friends decided to hike the tallest peak near their town. The trail was steep, rocky, and exhausting, testing both stamina and teamwork. Along the way, they encouraged one another, shared supplies, and navigated tricky paths. Reaching the summit, the panoramic view of the valley below was awe-inspiring. Each friend felt a renewed sense of accomplishment, realizing that determination, support, and patience can overcome even the most daunting challenges."
 },
 {
 number: 28,
-title:"The Patient Strategist",
-image:"https://source.unsplash.com/400x300/?strategy,patience",
-shortDesc:"Patience leads to success.",
-fullDesc:"Emma faced repeated failures in her projects. Instead of giving up, she patiently refined her strategies. Eventually, her careful planning led to outstanding results."
+title: "The Local History Project",
+shortDesc: "Students uncovered forgotten stories of their town.",
+fullDesc: "During a semester-long history project starting February 2024, students at Lincoln High investigated local archives. Maya and Liam discovered old photographs, letters, and diaries revealing untold stories of the town's founders. They created a multimedia presentation, including interviews with elderly residents. Their work earned praise from teachers and community members, highlighting the importance of preserving history and understanding one's roots. The project instilled in them a deep appreciation for storytelling and community heritage."
 },
 {
 number: 29,
-title:"The Problem Detective",
-image:"https://source.unsplash.com/400x300/?puzzle,solution",
-shortDesc:"Finding solutions others miss.",
-fullDesc:"Oliver had a talent for spotting overlooked problems. When the class project hit a roadblock, his insight solved the toughest challenges efficiently."
+title: "The Charity Fundraiser",
+shortDesc: "Alex organized a successful event to support local families.",
+fullDesc: "On April 30, 2024, Alex organized a charity bake sale to raise funds for families affected by a local flood. He coordinated volunteers, prepared marketing materials, and ensured all health standards were met. The event drew a large turnout, surpassing the fundraising goal. Alex realized that planning, dedication, and community involvement could make a tangible difference in people's lives. The experience motivated him to continue organizing events that benefit his community."
 },
 {
 number: 30,
-title:"The Bold Innovator",
-image:"https://source.unsplash.com/400x300/?innovation,creativity",
-shortDesc:"Trying something new pays off.",
-fullDesc:"Sophia decided to approach her project in a completely new way. Though risky, her innovation impressed her teachers and classmates, proving that courage can lead to remarkable results."
+title: "The Summer Coding Camp",
+shortDesc: "Clara enhanced her programming skills during summer break.",
+fullDesc: "During the summer of 2024, Clara attended a week-long coding camp focusing on web development and app design. Each day included workshops, hands-on projects, and collaborative challenges. She created a fully functional personal website by the end of the camp and presented it to instructors and peers. Clara's experience improved her technical skills and boosted her confidence in tackling complex problems. She learned that immersive, hands-on experiences can accelerate learning and uncover hidden potential."
 }
 );
 storyData.push(
 {
 number: 31,
-title:"The Strategic Thinker",
-image:"https://source.unsplash.com/400x300/?strategy,planning",
-shortDesc:"Thinking ahead makes the difference.",
-fullDesc:"Liam carefully planned every step of his school project. By anticipating challenges and preparing solutions, he delivered results that impressed both teachers and classmates."
+title: "The Robotics Breakthrough",
+shortDesc: "Mia invented a robot that could assist in daily chores.",
+fullDesc: "On May 12, 2024, Mia spent hours in her garage lab, working on a small robot designed to help with household tasks. She experimented with sensors, motors, and coding routines. After multiple failures, she finally managed to create a robot capable of carrying small objects and navigating obstacles. She demonstrated her invention at the school science fair, impressing both teachers and peers. Mia realized that persistence, trial and error, and creativity are key to achieving breakthroughs in innovation."
 },
 {
 number: 32,
-title:"The Innovative Approach",
-image:"https://source.unsplash.com/400x300/?innovation,idea",
-shortDesc:"Trying new methods brings success.",
-fullDesc:"Mia decided to approach her assignment differently than everyone else. Her creativity paid off, and her project became an example for the whole class."
+title: "The Volunteer Project",
+shortDesc: "Liam led a group to help renovate a local playground.",
+fullDesc: "In June 2024, Liam noticed the local playground had fallen into disrepair. Motivated to make a change, he organized a volunteer project, gathering classmates, parents, and community members. Over several weekends, they repainted equipment, fixed broken swings, and planted flowers around the area. By the end of the summer, the playground was vibrant and safe for children. Liam discovered that leadership, planning, and community spirit can transform public spaces and bring people together."
 },
 {
 number: 33,
-title:"The Calm Problem Solver",
-image:"https://source.unsplash.com/400x300/?calm,focus",
-shortDesc:"Staying calm under pressure.",
-fullDesc:"Ethan remained calm when the project faced unexpected difficulties. His focus and problem-solving skills helped the team finish on time with excellent results."
+title: "The Astronomy Night",
+shortDesc: "Sophie hosted a stargazing event for her friends.",
+fullDesc: "On August 14, 2024, Sophie set up telescopes in her backyard to observe the Perseid meteor shower. She invited friends and shared interesting facts about constellations, planets, and the Milky Way. Observing meteors streaking across the night sky created excitement and wonder for everyone. Sophie’s careful preparation, storytelling, and enthusiasm inspired some friends to take up astronomy themselves. The event reinforced her belief that sharing knowledge can spark curiosity and lifelong interests."
 },
 {
 number: 34,
-title:"The Observant Student",
-image:"https://source.unsplash.com/400x300/?observe,details",
-shortDesc:"Noticing small things makes a big impact.",
-fullDesc:"Anna noticed small mistakes in the classroom setup and suggested improvements. Her attention to detail saved time and made the project run smoothly."
+title: "The Creative Writing Contest",
+shortDesc: "Ethan entered a national storytelling competition.",
+fullDesc: "Ethan had always enjoyed writing, and in March 2024 he decided to participate in a national creative writing contest. He spent weeks crafting a story set in a futuristic city, complete with detailed characters, conflicts, and plot twists. Upon submitting his 10,000-word manuscript, he anxiously awaited results. Weeks later, he was awarded second place, receiving praise for creativity and narrative depth. Ethan learned that dedication, imagination, and persistence can turn passion into achievement."
 },
 {
 number: 35,
-title:"The Persistent Achiever",
-image:"https://source.unsplash.com/400x300/?persistence,success",
-shortDesc:"Never giving up pays off.",
-fullDesc:"Noah struggled at first with his assignments. By practicing daily and staying committed, he became one of the top students by the end of the semester."
+title: "The Mountain Rescue",
+shortDesc: "Alex helped save a hiker stranded during a storm.",
+fullDesc: "On September 2, 2024, Alex and his local volunteer rescue team received a call about a hiker stranded on a mountain trail during a sudden storm. Despite heavy rain and slippery paths, Alex carefully navigated to the hiker, providing first aid and guiding them safely back to the base. The experience reinforced the importance of preparedness, courage, and teamwork in life-threatening situations. Alex felt immense satisfaction in helping someone survive a dangerous situation."
 },
 {
 number: 36,
-title:"The Thoughtful Planner",
-image:"https://source.unsplash.com/400x300/?planning,organization",
-shortDesc:"Preparation is key to success.",
-fullDesc:"Sophia meticulously planned her science project. Her organized approach allowed her to manage time efficiently and deliver outstanding results."
+title: "The Photography Challenge",
+shortDesc: "Clara improved her photography skills through practice and patience.",
+fullDesc: "During the summer of 2024, Clara participated in a local photography challenge. Each week had a theme, from capturing landscapes to candid portraits. She experimented with lighting, angles, and composition. By the end of the challenge, Clara had compiled a portfolio of over 50 stunning photographs. Her work received recognition in a local exhibition. Clara realized that creativity, patience, and consistent practice are crucial for mastering any skill."
 },
 {
 number: 37,
-title:"The Bold Experimenter",
-image:"https://source.unsplash.com/400x300/?experiment,creative",
-shortDesc:"Taking risks leads to growth.",
-fullDesc:"Oliver tried an unusual method for his experiment. Though risky, it worked perfectly and taught him that bold choices can lead to big rewards."
+title: "The Historical Documentary",
+shortDesc: "Maya created a film uncovering forgotten stories of her town.",
+fullDesc: "Starting in February 2024, Maya interviewed elderly residents, collected archival materials, and documented historical sites around her town. She compiled these into a 30-minute documentary, highlighting personal stories and local heritage. The project took months of research, editing, and narration. Upon presentation, the documentary was praised for its depth and storytelling quality. Maya learned that dedication, thorough research, and attention to detail are essential in capturing history accurately and engagingly."
 },
 {
 number: 38,
-title:"The Knowledge Seeker",
-image:"https://source.unsplash.com/400x300/?knowledge,learning",
-shortDesc:"Curiosity drives success.",
-fullDesc:"Lily always asked questions and explored beyond what was taught. Her curiosity helped her discover new solutions that others overlooked."
+title: "The Environmental Initiative",
+shortDesc: "Liam led a campaign to reduce plastic waste in school.",
+fullDesc: "On March 22, 2024, Liam noticed that his school produced large amounts of plastic waste daily. He proposed a campaign to reduce usage by introducing reusable containers and organizing awareness sessions. Over several weeks, students and staff participated actively, resulting in a noticeable reduction in plastic consumption. Liam discovered that leadership, communication, and persistence can drive real environmental change within a community."
 },
 {
 number: 39,
-title:"The Patient Student",
-image:"https://source.unsplash.com/400x300/?patience,study",
-shortDesc:"Slow and steady wins.",
-fullDesc:"Max struggled with math at first. Through patience and continuous practice, he gradually mastered concepts that once seemed impossible."
+title: "The Musical Performance",
+shortDesc: "Ella overcame stage fright to perform in a concert.",
+fullDesc: "On April 15, 2024, Ella was scheduled to perform a solo violin piece at the school’s annual concert. Though she had practiced for months, she struggled with anxiety. Encouraged by her teacher and friends, she focused on breathing, posture, and emotional connection with the music. When she finally performed, the audience was captivated, and Ella felt a deep sense of accomplishment. She learned that preparation, focus, and courage are key to overcoming fear and achieving excellence."
 },
 {
 number: 40,
-title:"The Inspiring Mind",
-image:"https://source.unsplash.com/400x300/?inspiration,ideas",
-shortDesc:"Inspiration can change everything.",
-fullDesc:"Emma’s unique approach to problem-solving inspired her classmates. Her innovative thinking became a model for the class and motivated others to try new ideas."
+title: "The Local Science Workshop",
+shortDesc: "A hands-on workshop inspired students to explore STEM fields.",
+fullDesc: "During the summer of 2024, a local science workshop invited students to explore experiments in chemistry, physics, and robotics. Daniel participated, building small projects such as simple circuits and water filtration models. Mentors provided guidance and encouraged creativity. By the end of the workshop, Daniel not only enhanced his STEM skills but also developed teamwork and problem-solving abilities. He realized that practical experience and mentorship are invaluable in learning and personal growth."
 }
 );
-function renderStories(){
-const container = document.getElementById("stories");
-container.innerHTML = "";
-storyData.forEach((story)=>{
-container.innerHTML += `
-<div class="story">
-<h2>${story.number}. ${story.title}</h2>
-<img src="${story.image}" onerror="this.src='https://via.placeholder.com/400x200'">
-<p>${story.shortDesc}</p>
-<p class="full">${story.fullDesc}</p>
-<button onclick="toggle(this)">Read More</button>
-</div>
-`;
+storyData.push(
+{
+number: 41,
+title: "The Debate Triumph",
+shortDesc: "Sophia led her debate team to victory with strategy and confidence.",
+fullDesc: "On March 10, 2024, Sophia prepared her high school debate team for a regional competition. She researched extensively, practiced rebuttals, and coached her teammates on public speaking. During the event, her team faced tough opponents with strong arguments. Sophia remained composed, delivering persuasive points and guiding her team effectively. By the end, they won first place. Sophia learned that preparation, teamwork, and strategic thinking are crucial for success in any competitive endeavor."
+},
+{
+number: 42,
+title: "The Community Art Project",
+shortDesc: "Lucas organized a mural project that brought the neighborhood together.",
+fullDesc: "In May 2024, Lucas proposed painting a mural on the side of a community center. He coordinated volunteers, selected a theme representing unity, and prepared sketches. Over several weekends, families and neighbors joined, painting colorful scenes of nature and local culture. The completed mural became a source of pride for the community. Lucas discovered that collaboration and creative vision can strengthen community bonds and leave a lasting impact."
+},
+{
+number: 43,
+title: "The First Coding App",
+shortDesc: "Emma created a useful app after weeks of coding practice.",
+fullDesc: "During the summer of 2024, Emma decided to develop a productivity app for students. She spent weeks learning coding languages, debugging, and refining the user interface. After multiple trials, she released a functional app that helped students track assignments and deadlines efficiently. The app received positive feedback from peers and teachers. Emma realized that persistence, learning from mistakes, and dedication can turn ideas into practical solutions that benefit others."
+},
+{
+number: 44,
+title: "The Hiking Adventure",
+shortDesc: "A weekend hike turned into an unforgettable experience.",
+fullDesc: "On July 18, 2024, a group of friends set out on a challenging mountain hike. The trail was steep, with rocky terrain and unpredictable weather. Along the way, they encountered obstacles like fallen trees and sudden streams, requiring teamwork and problem-solving. Reaching the summit, they were rewarded with breathtaking views and a sense of accomplishment. The adventure taught them resilience, cooperation, and the joy of overcoming challenges together."
+},
+{
+number: 45,
+title: "The School Newspaper",
+shortDesc: "Daniel revitalized the school newspaper with engaging stories.",
+fullDesc: "Starting in February 2024, Daniel volunteered as editor of the school newspaper. He introduced new sections, interviewed students and staff, and encouraged contributions from diverse voices. Each edition included well-researched articles, opinion pieces, and creative stories. By the end of the semester, readership had grown significantly. Daniel learned that leadership, creativity, and commitment can transform a small initiative into something impactful and widely appreciated."
+},
+{
+number: 46,
+title: "The Volunteer Cleanup",
+shortDesc: "Clara organized a beach cleanup to protect local wildlife.",
+fullDesc: "On June 5, 2024, Clara noticed litter accumulating along the town beach. She coordinated a volunteer cleanup, recruiting classmates, neighbors, and environmental groups. Over the weekend, they collected trash, recycled materials, and restored natural habitats. Clara documented the effort and shared results with local media, inspiring more people to participate. She learned that initiative, organization, and community involvement can make a tangible difference for the environment."
+},
+{
+number: 47,
+title: "The Science Discovery",
+shortDesc: "A chemistry experiment led Noah to unexpected results.",
+fullDesc: "During a high school lab session on April 7, 2024, Noah conducted a chemical reaction experiment. Unexpectedly, the reaction produced a unique compound that fascinated both his classmates and teacher. He documented the procedure, researched the potential applications, and presented findings to the science department. This experience taught him curiosity, careful observation, and how unexpected results can open new avenues for learning and discovery."
+},
+{
+number: 48,
+title: "The Theater Performance",
+shortDesc: "Ella overcame stage fright to shine in a school play.",
+fullDesc: "On March 22, 2024, Ella was cast in the lead role of the school play. Initially nervous, she practiced lines diligently, rehearsed gestures, and worked on vocal projection. Opening night arrived, and she performed flawlessly, captivating the audience with her portrayal. The experience boosted her confidence and reinforced the importance of preparation, practice, and embracing opportunities despite fear."
+},
+{
+number: 49,
+title: "The Historical Exhibition",
+shortDesc: "Maya organized a museum-style exhibition at her school.",
+fullDesc: "In May 2024, Maya curated an exhibition showcasing artifacts, documents, and photographs from local history. She researched extensively, designed displays, and created informational panels for visitors. Students, teachers, and community members attended, praising the depth and presentation quality. Maya learned that meticulous research, planning, and attention to detail are essential in educating and inspiring others about history."
+},
+{
+number: 50,
+title: "The Marathon Milestone",
+shortDesc: "Alex achieved his goal of completing his first marathon.",
+fullDesc: "After months of training starting in January 2024, Alex ran his first marathon on April 20, 2024. Each week involved increasing running distances, endurance exercises, and overcoming physical and mental challenges. On race day, despite fatigue and difficult weather, he persevered and crossed the finish line. The experience taught him discipline, resilience, and the satisfaction of achieving long-term goals through consistent effort and dedication."
+}
+);
+storyData.push(
+{
+number: 51,
+title: "The Coding Marathon",
+shortDesc: "Lucas participated in an all-night coding hackathon.",
+fullDesc: "On June 15, 2024, Lucas joined a 24-hour hackathon organized at the local tech center. He worked tirelessly, collaborating with teammates to design an app for tracking fitness goals. Despite fatigue and technical glitches, they managed to develop a working prototype. By the end of the event, their app received praise from judges for creativity and functionality. Lucas learned the importance of teamwork, persistence, and managing stress under tight deadlines."
+},
+{
+number: 52,
+title: "The Secret Book Club",
+shortDesc: "Emma formed a club to explore literature with friends.",
+fullDesc: "In March 2024, Emma invited a few friends to join a secret book club that met weekly after school. Each meeting involved discussing a new book, analyzing themes, and sharing interpretations. The club encouraged critical thinking, creativity, and meaningful conversations. Over time, more students joined, and the club became a supportive community for those passionate about literature. Emma realized that shared interests can create lasting bonds and foster intellectual growth."
+},
+{
+number: 53,
+title: "The Nature Photography Trip",
+shortDesc: "A weekend adventure captured stunning landscapes.",
+fullDesc: "On July 12, 2024, Daniel organized a weekend trip to a nearby national park to practice nature photography. He experimented with angles, lighting, and framing, capturing waterfalls, wildlife, and sunset vistas. His careful planning and patience paid off with a portfolio of high-quality photographs. The experience strengthened his appreciation for the outdoors and reinforced the importance of observation, preparation, and creative vision."
+},
+{
+number: 54,
+title: "The Volunteer Reading Program",
+shortDesc: "Sophia helped younger children improve their reading skills.",
+fullDesc: "During April 2024, Sophia volunteered at a local elementary school to assist struggling readers. She developed interactive activities, read aloud, and provided encouragement. Week by week, the children's reading confidence and comprehension improved. Sophia found immense satisfaction in seeing their progress and discovered that patience, empathy, and dedication can make a meaningful difference in others’ lives."
+},
+{
+number: 55,
+title: "The Science Fair Invention",
+shortDesc: "Mia created a device to help reduce water waste.",
+fullDesc: "In May 2024, Mia developed a small sensor-based system that automatically shut off taps when not in use, aiming to reduce water wastage. She tested prototypes, refined coding algorithms, and presented her invention at the school science fair. The judges praised her creativity and technical skill. Mia learned that innovation comes from careful observation, experimentation, and determination to solve real-world problems."
+},
+{
+number: 56,
+title: "The Summer Writing Retreat",
+shortDesc: "Ella enhanced her storytelling skills during a creative retreat.",
+fullDesc: "In August 2024, Ella attended a week-long writing retreat that focused on narrative structure, character development, and dialogue. Each day involved writing exercises, group workshops, and constructive feedback. By the end of the retreat, she had completed a polished short story collection. Ella realized that consistent practice, mentorship, and openness to critique are essential for improving one’s craft."
+},
+{
+number: 57,
+title: "The Neighborhood Garden",
+shortDesc: "Alex and neighbors transformed an empty lot into a green space.",
+fullDesc: "In June 2024, Alex led a group of community members to convert a neglected lot into a thriving garden. They planted flowers, vegetables, and trees, while creating paths and seating areas. The project became a weekend gathering spot for neighbors, fostering collaboration and social connection. Alex learned that initiative, planning, and community involvement can turn overlooked spaces into sources of pride and joy."
+},
+{
+number: 58,
+title: "The History Documentary",
+shortDesc: "Liam produced a short film about local heritage.",
+fullDesc: "During spring 2024, Liam researched historical archives, conducted interviews with elderly residents, and filmed sites of significance in his town. He edited the footage into a 25-minute documentary, which was showcased at the local library. The project deepened his understanding of history, storytelling, and technical skills in video production. Liam discovered that dedication and attention to detail can bring forgotten stories to life."
+},
+{
+number: 59,
+title: "The Coding Club Achievement",
+shortDesc: "Clara’s club developed a website for the community center.",
+fullDesc: "In May 2024, Clara and her coding club collaborated to design and launch a website for their community center, providing schedules, announcements, and volunteer sign-ups. The project required planning, design skills, and teamwork. Upon completion, the website received positive feedback and increased community engagement. Clara realized that technical knowledge, cooperation, and practical application can produce tangible benefits for society."
+},
+{
+number: 60,
+title: "The First Solo Concert",
+shortDesc: "Daniel performed a piano recital in front of an audience for the first time.",
+fullDesc: "On March 30, 2024, Daniel took the stage for his first solo piano recital. Months of preparation included learning challenging pieces, practicing expression and timing, and overcoming stage fright. During the performance, he connected with the music and audience, earning enthusiastic applause. The experience reinforced the importance of perseverance, preparation, and self-confidence in achieving personal milestones."
+}
+);
+storyData.push(
+{
+number: 61,
+title: "The Robotics Competition",
+shortDesc: "Mia and her team competed in a regional robotics contest.",
+fullDesc: "On July 5, 2024, Mia participated in a regional robotics competition with her high school team. They designed and programmed a robot capable of navigating obstacles and performing tasks autonomously. The team faced unexpected technical challenges, including sensor malfunctions, but problem-solving and teamwork helped them overcome these issues. Their robot performed successfully during the final rounds, earning third place. Mia learned that perseverance, collaboration, and adaptive thinking are key to overcoming obstacles in complex projects."
+},
+{
+number: 62,
+title: "The Volunteer Reading Program",
+shortDesc: "Lucas helped children improve literacy skills in his community.",
+fullDesc: "During April 2024, Lucas volunteered at a local library to help children with reading difficulties. He prepared exercises, interactive storytelling sessions, and one-on-one guidance. Over the weeks, the children showed remarkable improvement in reading fluency and comprehension. Lucas discovered that patience, empathy, and consistent support can make a lasting impact on young learners’ lives."
+},
+{
+number: 63,
+title: "The Science Journal Publication",
+shortDesc: "Ella’s research was published in a student science journal.",
+fullDesc: "In May 2024, Ella completed a research project on renewable energy solutions for small communities. She compiled her findings into a well-structured report, detailing experiments, data analysis, and conclusions. The student science journal accepted her work for publication. This recognition boosted her confidence and highlighted the importance of precision, thorough documentation, and perseverance in scientific research."
+},
+{
+number: 64,
+title: "The Summer Art Camp",
+shortDesc: "Clara enhanced her painting skills during an immersive camp.",
+fullDesc: "During July 2024, Clara attended a week-long art camp focused on painting and mixed media. Each day included tutorials, practical exercises, and feedback sessions from experienced instructors. She experimented with color blending, texture, and perspective, creating several impressive pieces. The experience improved her technical skills and artistic confidence, teaching her that consistent practice and openness to critique are essential for creative growth."
+},
+{
+number: 65,
+title: "The Mountain Rescue Drill",
+shortDesc: "Alex participated in a volunteer rescue simulation to improve safety skills.",
+fullDesc: "On June 20, 2024, Alex joined a mountain rescue drill organized by the local volunteer fire department. He practiced navigation, first aid, and communication techniques in simulated emergency scenarios. The drill involved coordinating with a team, making quick decisions, and ensuring safety under pressure. This practical experience enhanced Alex’s preparedness for real emergencies and reinforced the value of teamwork, vigilance, and practical training."
+},
+{
+number: 66,
+title: "The Historical Research Project",
+shortDesc: "Maya uncovered forgotten stories from her town's archives.",
+fullDesc: "In March 2024, Maya embarked on a research project exploring her town’s history. She visited libraries, examined old newspapers, and conducted interviews with long-time residents. Through careful analysis, she uncovered stories of local pioneers and significant events that had been forgotten. She presented her findings in a detailed report and multimedia presentation. Maya learned the importance of dedication, curiosity, and attention to detail in uncovering meaningful insights from history."
+},
+{
+number: 67,
+title: "The Coding Bootcamp",
+shortDesc: "Daniel improved his programming skills during an intensive course.",
+fullDesc: "During August 2024, Daniel enrolled in a week-long coding bootcamp focused on web development and app creation. Each day included lectures, coding challenges, and collaborative projects. By the end of the course, he had developed a fully functional web application and gained a deeper understanding of programming concepts. Daniel realized that immersive, hands-on learning accelerates skill development and fosters confidence in technical abilities."
+},
+{
+number: 68,
+title: "The Community Garden Expansion",
+shortDesc: "Lucas helped expand a local garden to include more plants and activities.",
+fullDesc: "In June 2024, Lucas collaborated with neighborhood volunteers to expand the community garden. They added vegetable plots, flower beds, and benches for social gatherings. The project engaged people of all ages and promoted environmental awareness. Lucas discovered that teamwork, planning, and inclusive participation can transform community projects into lasting positive experiences."
+},
+{
+number: 69,
+title: "The Music Festival Performance",
+shortDesc: "Ella performed at a local festival, showcasing her musical talent.",
+fullDesc: "On July 15, 2024, Ella performed a solo piano piece at a local summer music festival. Months of preparation, practice, and overcoming stage anxiety culminated in a flawless performance. Audience members applauded her technical skill and expressive interpretation. Ella learned that dedication, consistent practice, and resilience in the face of challenges are essential to achieving artistic success."
+},
+{
+number: 70,
+title: "The First Published Story",
+shortDesc: "Clara had her short story published in a literary magazine.",
+fullDesc: "In May 2024, Clara submitted a short story she had written about community life to a literary magazine. After multiple revisions and feedback from mentors, her story was accepted for publication. Seeing her work in print was immensely rewarding and inspired her to continue writing. Clara realized that persistence, openness to feedback, and attention to detail are crucial for achieving success in creative endeavors."
+}
+);
+storyData.push(
+{
+number: 71,
+title: "The Science Olympiad",
+shortDesc: "Liam excelled in a regional science competition.",
+fullDesc: "On April 12, 2024, Liam participated in a regional Science Olympiad, competing in events related to physics, chemistry, and engineering. He spent weeks preparing, building models, and solving practice problems. During the competition, he faced tough challenges but applied critical thinking and teamwork to achieve top results. Liam won second place overall, learning that preparation, analytical thinking, and collaboration are essential for academic success."
+},
+{
+number: 72,
+title: "The Creative Writing Workshop",
+shortDesc: "Maya improved her storytelling skills through intensive practice.",
+fullDesc: "In March 2024, Maya attended a creative writing workshop focused on character development, plot construction, and narrative techniques. Over several sessions, she wrote multiple stories, received constructive feedback, and revised her work. By the end, she had completed a polished short story ready for submission to a literary contest. Maya discovered that persistence, openness to critique, and disciplined practice are key to developing strong writing skills."
+},
+{
+number: 73,
+title: "The Community Clean-Up Drive",
+shortDesc: "Alex led a local initiative to clean up public spaces.",
+fullDesc: "On May 20, 2024, Alex organized a community clean-up drive in his neighborhood. Volunteers gathered to remove litter, plant trees, and paint public benches. The project not only improved the appearance of the area but also strengthened community bonds. Alex learned that leadership, organization, and the ability to inspire others can create meaningful change in local communities."
+},
+{
+number: 74,
+title: "The Robotics Club Project",
+shortDesc: "Mia and her team built a robot for educational purposes.",
+fullDesc: "During the summer of 2024, Mia worked with her school’s robotics club to design a robot capable of assisting in classroom activities, such as delivering supplies and displaying information. They tested multiple prototypes, troubleshooting mechanical and programming challenges. Their final design successfully demonstrated functionality and efficiency. Mia realized that creativity, collaboration, and resilience are crucial when working on complex technical projects."
+},
+{
+number: 75,
+title: "The Photography Exhibition",
+shortDesc: "Clara showcased her photography at a local art show.",
+fullDesc: "In June 2024, Clara prepared a collection of photographs highlighting urban landscapes and natural scenery. She carefully curated images, edited them for quality, and presented them at a local art exhibition. Visitors appreciated the artistic perspective and attention to detail. Clara learned that dedication, preparation, and thoughtful presentation enhance the impact of creative work."
+},
+{
+number: 76,
+title: "The Debate Championship",
+shortDesc: "Ella led her team to victory with strategic arguments.",
+fullDesc: "On March 18, 2024, Ella participated in a debate championship at the regional level. She spent weeks researching topics, anticipating counterarguments, and coaching her teammates. During the event, her team delivered compelling arguments, rebutted opponents effectively, and maintained composure under pressure. They won first place, demonstrating that preparation, teamwork, and clear communication are critical in competitive debates."
+},
+{
+number: 77,
+title: "The Volunteer Tutoring Program",
+shortDesc: "Daniel helped students improve in math and science.",
+fullDesc: "During April 2024, Daniel volunteered at a local community center to tutor students struggling with math and science subjects. He developed structured lesson plans, personalized guidance, and interactive exercises. Over several weeks, students’ understanding and confidence improved significantly. Daniel realized that patience, clear communication, and encouragement are essential qualities for effective teaching."
+},
+{
+number: 78,
+title: "The Summer Coding Challenge",
+shortDesc: "Lucas created an innovative app in a competitive environment.",
+fullDesc: "In July 2024, Lucas entered a summer coding challenge where participants had 48 hours to develop functional applications. He designed an app to track personal goals and habits, working long hours and troubleshooting code. Despite limited sleep, he completed the project successfully, impressing judges with usability and design. Lucas learned that perseverance, problem-solving, and time management are key to success in intense creative competitions."
+},
+{
+number: 79,
+title: "The Local History Project",
+shortDesc: "Maya documented her town’s cultural heritage in detail.",
+fullDesc: "During May 2024, Maya conducted interviews, visited archives, and photographed historical sites around her town. She compiled her findings into a detailed report, including timelines, maps, and personal stories. The project was presented at the school exhibition and received praise from both students and teachers. Maya discovered that meticulous research, organization, and storytelling are essential in preserving and sharing history."
+},
+{
+number: 80,
+title: "The Music Recital",
+shortDesc: "Ella performed a challenging piano piece at a local recital.",
+fullDesc: "On June 22, 2024, Ella performed a complex piano composition at her school’s summer recital. She had practiced diligently for months, focusing on timing, expression, and stage presence. The performance was flawless, earning enthusiastic applause from the audience. Ella learned that consistent practice, focus, and confidence are crucial in achieving excellence in music and public performance."
+}
+);
+storyData.push(
+{
+number: 81,
+title: "The Environmental Campaign",
+shortDesc: "Clara raised awareness about local environmental issues.",
+fullDesc: "In April 2024, Clara launched a campaign to educate her community about recycling and reducing waste. She organized workshops, distributed informational flyers, and coordinated neighborhood clean-up events. Her efforts led to increased participation in sustainable practices and inspired other students to take action. Clara realized that advocacy, planning, and clear communication can create tangible environmental improvements and foster community responsibility."
+},
+{
+number: 82,
+title: "The Creative Writing Contest",
+shortDesc: "Maya won first place with her short story on friendship.",
+fullDesc: "During March 2024, Maya entered a regional creative writing contest with a story exploring the challenges and joys of friendship. She carefully developed characters, plot, and dialogue, revising her work multiple times based on feedback from peers and mentors. Her story was selected as the winner, earning recognition at a local ceremony. Maya learned that dedication, openness to critique, and attention to detail are essential for literary success."
+},
+{
+number: 83,
+title: "The Tech Workshop",
+shortDesc: "Lucas taught coding basics to younger students.",
+fullDesc: "In June 2024, Lucas volunteered to lead a technology workshop at his school, teaching basic coding and programming concepts to middle school students. He prepared tutorials, exercises, and interactive games to make learning engaging. The students responded enthusiastically, showing improved understanding of programming fundamentals. Lucas realized that teaching others reinforces one’s own knowledge and develops leadership and communication skills."
+},
+{
+number: 84,
+title: "The Science Club Discovery",
+shortDesc: "Ella and her club discovered a new method for water filtration.",
+fullDesc: "During May 2024, Ella participated in a science club project focused on sustainable water filtration. After weeks of experimentation, she and her teammates developed an innovative method using natural materials that improved water purification efficiency. They presented their findings at the school science fair, receiving praise from judges. Ella learned that curiosity, teamwork, and systematic experimentation can lead to meaningful scientific discoveries."
+},
+{
+number: 85,
+title: "The Summer Theater Performance",
+shortDesc: "Daniel overcame stage fright to perform in a school play.",
+fullDesc: "On July 10, 2024, Daniel took on a lead role in the school’s summer theater production. Despite initial anxiety, he practiced lines, gestures, and stage presence diligently. Opening night went flawlessly, with his performance receiving acclaim from teachers, peers, and audience members. Daniel realized that preparation, confidence, and persistence are key to overcoming challenges in performance arts."
+},
+{
+number: 86,
+title: "The Volunteer Health Initiative",
+shortDesc: "Mia organized a first-aid awareness campaign.",
+fullDesc: "In May 2024, Mia collaborated with local health professionals to host workshops teaching basic first-aid skills to students and community members. She coordinated schedules, prepared educational materials, and assisted in practical demonstrations. Participants gained valuable skills for emergencies, and Mia recognized the importance of organization, clear communication, and proactive planning in making community health initiatives successful."
+},
+{
+number: 87,
+title: "The Robotics Workshop",
+shortDesc: "Lucas taught a beginner robotics class for local youth.",
+fullDesc: "During June 2024, Lucas conducted a series of robotics workshops for middle school students. He introduced concepts like sensors, motors, and basic programming, guiding participants through hands-on projects. The students built simple robots and learned problem-solving techniques. Lucas discovered that sharing knowledge and encouraging creativity can empower younger learners and strengthen community engagement in STEM fields."
+},
+{
+number: 88,
+title: "The Historical Documentary",
+shortDesc: "Maya created a short film about local heritage.",
+fullDesc: "In April 2024, Maya researched historical landmarks and interviewed long-time residents to produce a short documentary about her town’s cultural heritage. She edited footage, added narration, and created a timeline of events. The final film was showcased at a school exhibition, educating visitors and receiving positive feedback. Maya learned that meticulous research, storytelling, and technical skills combine to preserve and share history effectively."
+},
+{
+number: 89,
+title: "The Music Composition",
+shortDesc: "Ella composed an original piece for the school orchestra.",
+fullDesc: "During March 2024, Ella composed a new orchestral piece inspired by nature and personal experiences. She arranged harmonies, melodies, and instrumentation, rehearsing with the school orchestra over several weeks. The performance was a success, demonstrating her creativity and musical proficiency. Ella realized that vision, dedication, and collaboration are vital to creating impactful music."
+},
+{
+number: 90,
+title: "The Volunteer Tutoring Marathon",
+shortDesc: "Daniel organized a week-long study camp for students.",
+fullDesc: "In July 2024, Daniel initiated a volunteer study camp to help students prepare for upcoming exams. Each day focused on specific subjects, with practice exercises, group discussions, and individual support. The students’ performance improved significantly, and feedback was overwhelmingly positive. Daniel learned that structured planning, patience, and dedication can create meaningful educational opportunities and foster a culture of learning."
+}
+);
+storyData.push(
+{
+number: 91,
+title: "The Science Experiment Success",
+shortDesc: "Mia conducted a chemistry experiment with impressive results.",
+fullDesc: "On March 25, 2024, Mia performed a chemistry experiment to test reactions between natural compounds. She carefully documented procedures, controlled variables, and observed outcomes. The experiment succeeded, yielding unexpected yet valuable results. Mia presented her findings at the school science fair, receiving praise from teachers and peers. She realized that attention to detail, patience, and thorough documentation are crucial in scientific research."
+},
+{
+number: 92,
+title: "The Art Mural Project",
+shortDesc: "Clara and classmates painted a mural to beautify the school.",
+fullDesc: "In June 2024, Clara led a team of students to create a large mural in the school’s main hallway. They planned the design, selected colors, and assigned roles for painting, shading, and detailing. Over several weeks, the mural came to life, showcasing creativity and teamwork. The project received admiration from the school community. Clara learned that collaboration, planning, and dedication can transform ideas into impactful visual art."
+},
+{
+number: 93,
+title: "The Coding Competition",
+shortDesc: "Lucas developed an innovative app under tight deadlines.",
+fullDesc: "During July 2024, Lucas participated in a coding competition where teams had only 24 hours to create functional software. He designed an app to help students track assignments and deadlines, overcoming challenges such as debugging and integrating new features. The app impressed the judges with its usability and design. Lucas realized that problem-solving, focus, and time management are essential for success in fast-paced tech competitions."
+},
+{
+number: 94,
+title: "The Local History Exhibition",
+shortDesc: "Maya curated a display highlighting her town’s past.",
+fullDesc: "In April 2024, Maya collected photographs, documents, and artifacts to create an exhibition on her town’s history. She organized the materials, wrote informative descriptions, and guided visitors through the timeline of events. The exhibition received praise for its thorough research and engaging presentation. Maya learned that careful research, organization, and storytelling are key to educating and inspiring others."
+},
+{
+number: 95,
+title: "The Music Collaboration",
+shortDesc: "Ella composed and performed a duet with a fellow student.",
+fullDesc: "On June 10, 2024, Ella collaborated with another pianist to create a duet for the school’s annual concert. They coordinated melodies, harmonies, and timing, rehearsing daily to ensure synchronization. The performance was a success, captivating the audience. Ella realized that collaboration, adaptability, and consistent practice are essential in creating harmonious musical projects."
+},
+{
+number: 96,
+title: "The Volunteer Sports Camp",
+shortDesc: "Daniel organized a summer camp to teach children new sports skills.",
+fullDesc: "During July 2024, Daniel led a week-long sports camp at the local community center. Activities included soccer, basketball, and basic fitness training. He prepared lesson plans, demonstrated techniques, and provided encouragement. The children improved their skills and developed a love for physical activity. Daniel learned that structured planning, patience, and motivation are key to successful volunteer programs."
+},
+{
+number: 97,
+title: "The Science Fair Innovation",
+shortDesc: "Mia designed a project to reduce household energy consumption.",
+fullDesc: "In May 2024, Mia developed a sensor-based system that automatically adjusted lighting and heating in homes to save energy. She built prototypes, tested them, and presented her work at the school science fair. The judges commended the creativity and practicality of her project. Mia realized that observation, experimentation, and persistence are essential for impactful innovation."
+},
+{
+number: 98,
+title: "The Art Photography Contest",
+shortDesc: "Clara captured nature’s beauty for a regional contest.",
+fullDesc: "During August 2024, Clara submitted a series of photographs showcasing landscapes, flora, and wildlife. She carefully framed shots, adjusted lighting, and edited images to highlight natural beauty. The collection won second place in the regional photography contest. Clara learned that patience, attention to detail, and creativity are crucial in capturing compelling visual art."
+},
+{
+number: 99,
+title: "The Debate Tournament",
+shortDesc: "Ella and her team won by presenting compelling arguments.",
+fullDesc: "On March 30, 2024, Ella led her debate team in a regional tournament. They prepared extensively, researched topics, and practiced rebuttals. During the event, their clear reasoning, structured arguments, and teamwork earned them first place. Ella realized that preparation, communication, and collaboration are key to success in competitive debates."
+},
+{
+number: 100,
+title: "The Community Volunteer Award",
+shortDesc: "Daniel was recognized for his consistent volunteer work.",
+fullDesc: "In June 2024, Daniel received an award from the local community center for his dedication to volunteer programs, including tutoring, sports camps, and environmental initiatives. The recognition motivated him to continue giving back and inspired others to participate. Daniel learned that commitment, empathy, and active involvement can positively influence the community and create lasting impact."
+}
+);
+storyData.push(
+{
+number: 101,
+title: "The Robotics Challenge",
+shortDesc: "Mia led her team to build a robot for a school competition.",
+fullDesc: "In August 2024, Mia and her robotics team prepared for a regional school robotics challenge. They designed a robot capable of navigating obstacles and completing specific tasks autonomously. After multiple trials and adjustments, their robot performed successfully in the competition, earning second place. Mia learned the importance of meticulous planning, collaboration, and iterative problem-solving in technical projects."
+},
+{
+number: 102,
+title: "The Historical Documentary",
+shortDesc: "Maya created a film documenting her town’s heritage.",
+fullDesc: "During May 2024, Maya researched historical landmarks, interviewed long-time residents, and collected archival photographs to produce a short documentary about her town's cultural heritage. She edited the footage, wrote narration, and presented the film at a local school exhibition. The project received praise for its depth and attention to detail. Maya discovered that research, storytelling, and persistence are essential in producing meaningful historical content."
+},
+{
+number: 103,
+title: "The Science Innovation",
+shortDesc: "Lucas developed a device to monitor water quality.",
+fullDesc: "On June 18, 2024, Lucas completed a science project that involved creating a portable device capable of testing water quality in local streams. He tested sensors, analyzed data, and calibrated the device for accuracy. His project was displayed at the school science fair, impressing teachers and peers with its practical application. Lucas realized that experimentation, accuracy, and dedication are crucial for producing reliable scientific work."
+},
+{
+number: 104,
+title: "The Community Theater Play",
+shortDesc: "Ella acted in a local school theater production.",
+fullDesc: "In July 2024, Ella rehearsed for weeks for a leading role in her school’s community theater play. She practiced lines, expressions, and stage presence diligently. On opening night, her performance captivated the audience, earning standing ovations. Ella learned that preparation, persistence, and confidence are vital to excelling in performing arts."
+},
+{
+number: 105,
+title: "The Environmental Awareness Campaign",
+shortDesc: "Clara organized events to educate her community on recycling.",
+fullDesc: "During April 2024, Clara coordinated workshops, clean-up drives, and educational presentations to promote recycling and sustainability in her community. The initiative engaged students, teachers, and neighbors, creating a noticeable impact. Clara realized that leadership, communication, and consistent effort can bring about meaningful environmental change."
+},
+{
+number: 106,
+title: "The Coding Marathon",
+shortDesc: "Daniel participated in an intensive weekend hackathon.",
+fullDesc: "On May 10, 2024, Daniel joined a 48-hour coding marathon where participants were tasked with developing functional applications from scratch. Working with teammates, he designed a productivity app that tracked habits and deadlines. Despite long hours and technical challenges, their team completed the app successfully. Daniel learned that problem-solving, teamwork, and endurance are essential for success in high-pressure tech projects."
+},
+{
+number: 107,
+title: "The Art Exhibition",
+shortDesc: "Mia displayed her paintings at a local gallery.",
+fullDesc: "In June 2024, Mia curated a collection of her artwork for display at a community gallery. She selected pieces, prepared descriptions, and arranged them to maximize visual impact. Visitors praised her creativity, attention to detail, and unique artistic style. Mia realized that presentation, preparation, and dedication are as important as the creative process itself."
+},
+{
+number: 108,
+title: "The Debate Championship",
+shortDesc: "Lucas and his team won with strong arguments and teamwork.",
+fullDesc: "On March 22, 2024, Lucas led his debate team in a regional tournament. They researched topics, anticipated counterarguments, and delivered persuasive speeches. Their teamwork, strategy, and clear communication earned them first place. Lucas learned that preparation, confidence, and collaboration are key components of success in competitive debates."
+},
+{
+number: 109,
+title: "The Volunteer Tutoring Program",
+shortDesc: "Ella helped students excel in math and science.",
+fullDesc: "During April 2024, Ella volunteered at a community learning center, providing tutoring to students struggling in math and science. She created lesson plans, guided students through problems, and encouraged critical thinking. Over several weeks, students showed significant improvement in understanding and confidence. Ella realized that patience, clarity, and dedication are essential for effective teaching."
+},
+{
+number: 110,
+title: "The Summer Music Recital",
+shortDesc: "Clara performed a complex piano composition with excellence.",
+fullDesc: "On July 18, 2024, Clara performed a challenging piano piece at her school’s summer recital. She had practiced daily for months, focusing on timing, expression, and technique. The performance was flawless, earning enthusiastic applause from the audience. Clara learned that consistent practice, attention to detail, and perseverance are crucial for success in music and public performance."
+}
+);
+// إنشاء القصص
+const container = document.getElementById("storyContainer");
+
+function displayStories(stories){
+    container.innerHTML = "";
+    stories.forEach(story => {
+        const div = document.createElement("div");
+        div.classList.add("story");
+        div.innerHTML = `
+            <h2>${story.number}. ${story.title}</h2>
+            <img src="${story.image}" alt="${story.title}">
+            <p class="short">${story.shortDesc}</p>
+            <p class="full">${story.fullDesc}</p>
+            <button onclick="toggleFull(this)">Read More</button>
+        `;
+        container.appendChild(div);
+    });
+}
+
+// Read More toggle
+function toggleFull(btn){
+    const full = btn.parentElement.querySelector(".full");
+    if(full.style.display==="none" || full.style.display===""){
+        full.style.display="block";
+        btn.textContent="Read Less";
+    } else {
+        full.style.display="none";
+        btn.textContent="Read More";
+    }
+}
+
+// Search
+const searchInput = document.getElementById("search");
+searchInput.addEventListener("input", () => {
+    const query = searchInput.value.toLowerCase();
+    const filtered = storyData.filter(s => s.title.toLowerCase().includes(query) || s.shortDesc.toLowerCase().includes(query) || s.fullDesc.toLowerCase().includes(query));
+    displayStories(filtered);
 });
-}
 
-function toggle(btn){
-let full = btn.previousElementSibling;
-if(full.style.display === "block"){
-full.style.display = "none";
-btn.innerText = "Read More";
-}else{
-full.style.display = "block";
-btn.innerText = "Read Less";
-}
-}
-
-function searchStories(){
-let input = document.getElementById("search").value.toLowerCase();
-let stories = document.getElementsByClassName("story");
-for(let i=0;i<stories.length;i++){
-let text = stories[i].innerText.toLowerCase();
-stories[i].style.display = text.includes(input) ? "block" : "none";
-}
-}
-
-renderStories();
+// عرض كل القصص أول مرة
+displayStories(storyData);
 </script>
 
 </body>
