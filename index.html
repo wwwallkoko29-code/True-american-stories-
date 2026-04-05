@@ -3639,5 +3639,54 @@ header { background: #333; color: #fff; padding: 20px; text-align: center; }
   <p class="full">The Titanic’s sinking serves as a reminder of human ambition and the importance of safety standards. Its story has been memorialized in books, films, and museums, ensuring it remains a permanent part of history.</p>
   <button class="read-more-btn" onclick="toggle(this)">Read More</button>
 </div>
+</div<div id="stories">
+  <!-- قصصك 450 هنا -->
+  <div class="story" data-category="Crime">
+    <h2>قصة 1</h2>
+    <img src="رابط_صورة_1.jpg" alt="قصة 1">
+    <p>ملخص القصة ... <span class="full">تفاصيل أطول هنا</span></p>
+    <a class="read-more-btn" onclick="toggle(this)">Read More</a>
+  </div>
 
+  <!-- ... كل القصص حتى القصة 450 -->
+</div> <!-- نهاية div#stories -->
+
+<!-- هنا مباشرة الصق هذا الكود -->
+<script>
+  // وظيفة Read More / Read Less
+  function toggle(button) {
+    const fullText = button.previousElementSibling;
+    if (fullText.style.display === "block") {
+      fullText.style.display = "none";
+      button.textContent = "Read More";
+    } else {
+      fullText.style.display = "block";
+      button.textContent = "Read Less";
+    }
+  }
+
+  // وظيفة البحث
+  const searchInput = document.getElementById("search");
+  searchInput.addEventListener("input", function() {
+    const query = this.value.toLowerCase();
+    document.querySelectorAll(".story").forEach(story => {
+      const text = story.textContent.toLowerCase();
+      story.style.display = text.includes(query) ? "block" : "none";
+    });
+  });
+
+  // وظيفة الفئات
+  const categoryButtons = document.querySelectorAll(".category-btn");
+  categoryButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const category = btn.getAttribute("data-category");
+      document.querySelectorAll(".story").forEach(story => {
+        story.style.display = (category === "All" || story.getAttribute("data-category") === category) ? "block" : "none";
+      });
+    });
+  });
+</script>
+
+</body>
+</html> 
 
