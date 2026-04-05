@@ -2,170 +2,353 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>300 English Stories</title>
+<title>Stories</title>
 <style>
-body { font-family: Arial, sans-serif; background:#111; color:white; margin:0; padding:0; }
-.container { max-width:1200px; margin:auto; padding:20px; }
-h1 { text-align:center; }
-.story { border:1px solid #444; margin:10px 0; padding:10px; border-radius:8px; background:#222; }
-img { width:100%; max-width:300px; height:180px; object-fit:cover; display:block; margin-bottom:10px; border-radius:5px; }
+body { font-family: Arial; background:#111; color:white; margin:0; }
+.container { padding:20px; max-width:1000px; margin:auto; }
+.story { background:#222; padding:15px; margin:10px 0; border-radius:10px; }
+img { width:100%; max-width:400px; height:200px; object-fit:cover; border-radius:8px; }
 .full { display:none; margin-top:10px; }
-button { margin-top:5px; padding:5px 10px; border:none; background:#555; color:white; cursor:pointer; border-radius:5px; }
+button { margin-top:10px; padding:6px 10px; background:#555; color:white; border:none; cursor:pointer; border-radius:5px; }
 button:hover { background:#777; }
-#search { width:100%; padding:10px; margin:20px 0; border-radius:5px; border:none; }
+#search { width:100%; padding:10px; margin-bottom:20px; border-radius:5px; border:none; }
 </style>
 </head>
 <body>
 
 <div class="container">
-<h1>300 English Stories</h1>
-<input id="search" placeholder="Search stories..." onkeyup="searchStories()">
+<h1>Stories</h1>
 
-<div id="stories">
+<input id="search" placeholder="Search..." onkeyup="searchStories()">
+
+<div id="stories"></div>
+</div>
 
 <script>
-// Array of sample story titles and short/long descriptions
 const storyData = [
 {
+number: 1,
 title:"The Quiet Student",
-shortDesc:"A silent boy everyone thought was stupid.",
-fullDesc:"In a small American school, a quiet boy named Ethan was ignored by everyone. Students mocked him, thinking he was slow. But one day, during a crisis, Ethan solved a complex problem faster than anyone. It turned out he was a genius who simply hated attention."
+image:"https://source.unsplash.com/400x300/?books,library",
+shortDesc:"A quiet boy nobody noticed.",
+fullDesc:"There was a boy who sat in the last row of the class. He never spoke, never asked questions, and never caused problems. Everyone thought he was weak or unintelligent.\n\nBut the truth was completely different. He observed everything. He understood more than anyone else. One day, when the teacher asked a difficult question, nobody answered. The quiet student raised his hand and solved it perfectly.\n\nFrom that day, people started to see him differently."
 },
 {
-title:"The Fake Genius",
-shortDesc:"He acted smart, but reality was different.",
-fullDesc:"Mark always pretended to be intelligent. He used big words and acted confident. But when a real challenge appeared, he froze. This story shows how confidence without real skill eventually collapses."
-},
-{
-title:"The Hidden Hacker",
-shortDesc:"A teenager secretly learning hacking.",
-fullDesc:"Alex spent nights learning coding and cybersecurity. While others played games, he built tools and tested systems. One day, he prevented a real cyber attack in his school network."
-},
-{
-title:"The School Bully",
-shortDesc:"A bully meets unexpected resistance.",
-fullDesc:"Jake ruled the school with fear. Until one quiet student stood up to him. Not with violence, but intelligence and strategy. The bully lost his power overnight."
-},
-{
-title:"The Lonely Genius",
-shortDesc:"Being smart made him isolated.",
-fullDesc:"Daniel understood things faster than everyone. But that made him different. No friends, no connection. Until he met someone who saw beyond intelligence."
-},
-{
-title:"The Exam Trick",
-shortDesc:"A clever student beats the system.",
-fullDesc:"During a difficult exam, Sarah didn’t cheat. She simply understood the pattern of questions and predicted them perfectly."
-},
-{
+number: 2,
 title:"The Fear of Failure",
-shortDesc:"Smart but afraid to try.",
-fullDesc:"Kevin knew he was smart, but fear stopped him. He avoided challenges until one day he had no choice but to face his fear."
+image:"https://source.unsplash.com/400x300/?brain,knowledge",
+shortDesc:"A smart student held back by fear.",
+fullDesc:"Kevin knew he was intelligent, but he was always afraid to try. Every time an opportunity came, he avoided it because he feared failure. Over time, his classmates surpassed him, not because they were smarter, but because they took risks.\n\nOne day, Kevin had no choice. He was forced into a competition. Nervous and uncertain, he gave it everything he had. He didn’t win—but for the first time, he realized failure wasn’t the end. It was the beginning."
 },
 {
-title:"The Silent Observer",
-shortDesc:"He noticed everything.",
-fullDesc:"While others talked, Liam observed. He knew secrets, patterns, and behaviors. That made him powerful in ways no one understood."
+number: 3,
+title:"The Hidden Potential",
+image:"https://source.unsplash.com/400x300/?school,classroom",
+shortDesc:"Talents hidden from everyone.",
+fullDesc:"Mia was overlooked in every class. Teachers and students assumed she was average. Yet she had a secret skill in problem solving and creative thinking.\n\nDuring a school project, she revealed her hidden potential and amazed everyone. She learned that sometimes the world doesn’t see your abilities until you show them."
 },
 {
-title:"The Online Identity",
-shortDesc:"Different person online.",
-fullDesc:"Emma was shy in real life but confident online. Her digital life slowly began to affect her real personality."
-},
-{
-title:"The Unexpected Winner",
-shortDesc:"No one believed he could win.",
-fullDesc:"Everyone laughed at Noah. But when competition day came, he shocked everyone with his preparation."
-},
-{
-title:"The Code Breaker",
-shortDesc:"Solving impossible puzzles.",
-fullDesc:"A student solved codes no teacher could understand, revealing hidden messages in school systems."
-},
-{
-title:"The Smart Dropout",
-shortDesc:"Left school but not learning.",
-fullDesc:"He dropped out, but continued learning alone, eventually becoming more successful than his classmates."
-},
-{
-title:"The Social Mask",
-shortDesc:"Pretending to fit in.",
-fullDesc:"She acted like everyone else, hiding her true personality to avoid rejection."
-},
-{
-title:"The Rivalry",
-shortDesc:"Two students competing.",
-fullDesc:"Their competition pushed both to become better, but also revealed their weaknesses."
-},
-{
-title:"The Secret Project",
-shortDesc:"Working on something big.",
-fullDesc:"A student secretly built a powerful app that later changed his life."
-},
-{
-title:"The Late Realization",
-shortDesc:"Understanding too late.",
-fullDesc:"He realized his potential only after wasting years ignoring it."
-},
-{
-title:"The Manipulator",
-shortDesc:"Controlling others quietly.",
-fullDesc:"A student learned how to influence people without them noticing."
-},
-{
-title:"The Observer",
-shortDesc:"Watching silently.",
-fullDesc:"He learned more by watching others than by talking."
-},
-{
+number: 4,
 title:"The Turning Point",
-shortDesc:"A moment that changed everything.",
-fullDesc:"One event pushed him to change his entire life path."
+image:"https://source.unsplash.com/400x300/?change,life",
+shortDesc:"One moment changed everything.",
+fullDesc:"For years, nothing in Ryan’s life changed. Same routine, same failures, same excuses. Until one day, something small happened—a missed opportunity that could have changed his future.\n\nThat moment hit him hard. He realized he was the reason he was stuck. From that day forward, he changed his habits, his mindset, and his actions. Slowly, his life followed."
 },
 {
+number: 5,
+title:"The Observer",
+image:"https://source.unsplash.com/400x300/?observe,focus",
+shortDesc:"Watching instead of speaking.",
+fullDesc:"Liam was never the loudest person in the room. Instead, he watched. He noticed patterns, behaviors, and small details others missed.\n\nOver time, he began understanding people better than they understood themselves. While others relied on strength or popularity, Liam used knowledge. And knowledge made him powerful."
+},
+{
+number: 6,
+title:"The Unexpected Winner",
+image:"https://source.unsplash.com/400x300/?success,win",
+shortDesc:"No one believed in him.",
+fullDesc:"Noah was always underestimated. People laughed when he joined competitions. They saw him as average, nothing more.\n\nBut Noah trained quietly. Day after day, he improved. When the final competition arrived, he surprised everyone—not just by winning, but by dominating. Sometimes, the strongest people are the ones no one notices."
+},
+{
+number: 7,
+title:"The Double Life",
+image:"https://source.unsplash.com/400x300/?secret,abstract",
+shortDesc:"Two completely different identities.",
+fullDesc:"Emma lived two lives. In school, she was shy and quiet. Online, she was confident and expressive.\n\nOver time, those two worlds began to collide. Emma had to decide which version of herself was real—and which one she wanted to become."
+},
+{
+number: 8,
+title:"The Silent Challenge",
+image:"https://source.unsplash.com/400x300/?challenge,success",
+shortDesc:"Proving without speaking.",
+fullDesc:"Jake was always challenged by others, but he never argued back. Instead, he focused on improving himself.\n\nOne day, when it mattered most, he proved everything without saying a single word. Actions spoke louder than anything he could have said."
+},
+{
+number: 9,
 title:"The Real Genius",
-shortDesc:"Not what people expect.",
-fullDesc:"True intelligence is not loud. It’s quiet, patient, and powerful."
+image:"https://source.unsplash.com/400x300/?smart,intelligent",
+shortDesc:"Intelligence is not always visible.",
+fullDesc:"Many people think intelligence is loud, fast, and obvious. But true intelligence is quiet. It observes, adapts, and acts when needed.\n\nThose who understand this don’t need to prove themselves. Their results speak for them."
+},
+{
+number: 10,
+title:"The Late Bloomer",
+image:"https://source.unsplash.com/400x300/?growth,development",
+shortDesc:"Starting late but achieving greatness.",
+fullDesc:"Sophia never excelled early in school. She struggled with simple tasks while others succeeded. Yet she never gave up. Over time, her patience, practice, and persistence paid off. By the end of her school years, she became one of the top students."
+},
+{
+number: 11,
+title:"The Creative Mind",
+image:"https://source.unsplash.com/400x300/?creativity,idea",
+shortDesc:"A mind full of ideas.",
+fullDesc:"Oliver had a head full of ideas, but rarely shared them. Teachers overlooked him because he seemed quiet. One day, a project required innovation, and Oliver revealed his creativity. His solution amazed everyone and changed the way projects were done in class."
+},
+{
+number: 12,
+title:"The Persistent Learner",
+image:"https://source.unsplash.com/400x300/?books,study",
+shortDesc:"Never stopping, never giving up.",
+fullDesc:"Hannah struggled at first with mathematics. Numbers seemed impossible. But she studied every day, asked questions, and practiced relentlessly. Eventually, she not only passed, but also helped classmates who were still struggling."
+},
+{
+number: 13,
+title:"The Problem Solver",
+image:"https://source.unsplash.com/400x300/?puzzle,logic",
+shortDesc:"Solving what others cannot.",
+fullDesc:"Ethan loved puzzles. While classmates ignored complex problems, he focused on solutions. One day, a difficult problem in class stumped everyone. Ethan calmly solved it, earning respect and admiration."
+},
+{
+number: 14,
+title:"The Risk Taker",
+image:"https://source.unsplash.com/400x300/?risk,challenge",
+shortDesc:"Stepping out of comfort zones.",
+fullDesc:"Lily always played it safe. One opportunity required courage—she took it. Even though it was risky, the experience taught her more than any safe choice could. She learned to trust herself."
+},
+{
+number: 15,
+title:"The Observer of Details",
+image:"https://source.unsplash.com/400x300/?details,focus",
+shortDesc:"Small details, big impact.",
+fullDesc:"Max noticed what others ignored. A misaligned desk, a forgotten step, a small hint in a problem. Using these observations, he solved a class project flawlessly, proving attention to detail matters."
+},
+{
+number: 16,
+title:"The Patient One",
+image:"https://source.unsplash.com/400x300/?time,patience",
+shortDesc:"Slow and steady wins the race.",
+fullDesc:"Anna struggled with writing essays at first. But day by day, she improved. Her patience and persistence led to top grades, showing that consistency beats speed."
+},
+{
+number: 17,
+title:"The Mentor in Disguise",
+image:"https://source.unsplash.com/400x300/?books,learning",
+shortDesc:"Learning from unexpected people.",
+fullDesc:"Lucas thought learning came only from teachers. A classmate showed him a new method of understanding history. Lucas realized knowledge can come from anyone, not just authority."
+},
+{
+number: 18,
+title:"The Fearless Decision",
+image:"https://source.unsplash.com/400x300/?decision,choice",
+shortDesc:"Choosing courage over safety.",
+fullDesc:"Ella avoided risks her whole life. One day, she had to choose: play it safe or take a chance. She chose the chance, and even with mistakes, she grew stronger and more confident."
+},
+{
+number: 19,
+title:"The Hidden Strength",
+image:"https://source.unsplash.com/400x300/?strength,hidden",
+shortDesc:"Strength is not always visible.",
+fullDesc:"Mason looked weak in appearance but had incredible inner strength. When challenges came, he used strategy, intelligence, and patience to overcome obstacles that seemed impossible."
+},
+{
+number: 20,
+title:"The Final Realization",
+image:"https://source.unsplash.com/400x300/?knowledge,light",
+shortDesc:"Understanding life and self.",
+fullDesc:"After years of confusion, mistakes, and failures, Oliver finally understood: life isn’t about perfection, but about learning, adapting, and continuing. This clarity changed his approach completely."
 }
 ];
-
-// Generate HTML for all stories
-storyData.forEach((story,i)=>{
-  document.write(`
-    <div class="story">
-      <img src="https://picsum.photos/seed/${i}/300/180" onerror="this.src='https://via.placeholder.com/300x180?text=Story+Image'">
-      <h2>${story.title}</h2>
-      <p>${story.shortDesc}</p>
-      <p class="full">${story.fullDesc}</p>
-      <button onclick="toggle(this)">Read More</button>
-    </div>
-  `);
+storyData.push(
+{
+number: 21,
+title:"The Creative Spark",
+image:"https://source.unsplash.com/400x300/?creativity,idea",
+shortDesc:"A small idea becomes something big.",
+fullDesc:"Sophia had an idea for a project but kept it to herself. Slowly, she nurtured it, researched, and experimented. Eventually, it turned into a successful solution that impressed teachers and classmates alike."
+},
+{
+number: 22,
+title:"The Hidden Observer",
+image:"https://source.unsplash.com/400x300/?observe,focus",
+shortDesc:"Watching quietly makes you wise.",
+fullDesc:"Ethan was always quiet in class. He observed how people worked, how problems were solved, and noticed details no one else did. When the final project came, he applied his observations and achieved excellence."
+},
+{
+number: 23,
+title:"The Determined Mind",
+image:"https://source.unsplash.com/400x300/?books,study",
+shortDesc:"Persistence beats all obstacles.",
+fullDesc:"Lily struggled with her studies at first, often feeling left behind. But she committed herself to practice daily. Slowly, her understanding improved and she became one of the top students."
+},
+{
+number: 24,
+title:"The Unexpected Leader",
+image:"https://source.unsplash.com/400x300/?leadership,team",
+shortDesc:"Leadership can come from anyone.",
+fullDesc:"No one expected Alex to lead the team. He was quiet and unassuming. But when the group faced a challenge, his calm guidance helped them succeed beyond expectations."
+},
+{
+number: 25,
+title:"The Thoughtful Planner",
+image:"https://source.unsplash.com/400x300/?planning,strategy",
+shortDesc:"Preparation is key.",
+fullDesc:"Mia always planned everything meticulously. When her school organized a competition, her careful preparation gave her an advantage others overlooked, leading to her success."
+},
+{
+number: 26,
+title:"The Curious Mind",
+image:"https://source.unsplash.com/400x300/?curiosity,learning",
+shortDesc:"Asking questions changes everything.",
+fullDesc:"Ryan constantly asked questions, even when others ignored him. His curiosity led to a deeper understanding of every subject and eventually became a source of inspiration for classmates."
+},
+{
+number: 27,
+title:"The Quiet Genius",
+image:"https://source.unsplash.com/400x300/?intelligence,brain",
+shortDesc:"Smart people don’t always speak first.",
+fullDesc:"Daniel never raised his hand in class, preferring to think things through. When a difficult problem appeared, he calmly solved it, surprising everyone with his intelligence."
+},
+{
+number: 28,
+title:"The Patient Strategist",
+image:"https://source.unsplash.com/400x300/?strategy,patience",
+shortDesc:"Patience leads to success.",
+fullDesc:"Emma faced repeated failures in her projects. Instead of giving up, she patiently refined her strategies. Eventually, her careful planning led to outstanding results."
+},
+{
+number: 29,
+title:"The Problem Detective",
+image:"https://source.unsplash.com/400x300/?puzzle,solution",
+shortDesc:"Finding solutions others miss.",
+fullDesc:"Oliver had a talent for spotting overlooked problems. When the class project hit a roadblock, his insight solved the toughest challenges efficiently."
+},
+{
+number: 30,
+title:"The Bold Innovator",
+image:"https://source.unsplash.com/400x300/?innovation,creativity",
+shortDesc:"Trying something new pays off.",
+fullDesc:"Sophia decided to approach her project in a completely new way. Though risky, her innovation impressed her teachers and classmates, proving that courage can lead to remarkable results."
+}
+);
+storyData.push(
+{
+number: 31,
+title:"The Strategic Thinker",
+image:"https://source.unsplash.com/400x300/?strategy,planning",
+shortDesc:"Thinking ahead makes the difference.",
+fullDesc:"Liam carefully planned every step of his school project. By anticipating challenges and preparing solutions, he delivered results that impressed both teachers and classmates."
+},
+{
+number: 32,
+title:"The Innovative Approach",
+image:"https://source.unsplash.com/400x300/?innovation,idea",
+shortDesc:"Trying new methods brings success.",
+fullDesc:"Mia decided to approach her assignment differently than everyone else. Her creativity paid off, and her project became an example for the whole class."
+},
+{
+number: 33,
+title:"The Calm Problem Solver",
+image:"https://source.unsplash.com/400x300/?calm,focus",
+shortDesc:"Staying calm under pressure.",
+fullDesc:"Ethan remained calm when the project faced unexpected difficulties. His focus and problem-solving skills helped the team finish on time with excellent results."
+},
+{
+number: 34,
+title:"The Observant Student",
+image:"https://source.unsplash.com/400x300/?observe,details",
+shortDesc:"Noticing small things makes a big impact.",
+fullDesc:"Anna noticed small mistakes in the classroom setup and suggested improvements. Her attention to detail saved time and made the project run smoothly."
+},
+{
+number: 35,
+title:"The Persistent Achiever",
+image:"https://source.unsplash.com/400x300/?persistence,success",
+shortDesc:"Never giving up pays off.",
+fullDesc:"Noah struggled at first with his assignments. By practicing daily and staying committed, he became one of the top students by the end of the semester."
+},
+{
+number: 36,
+title:"The Thoughtful Planner",
+image:"https://source.unsplash.com/400x300/?planning,organization",
+shortDesc:"Preparation is key to success.",
+fullDesc:"Sophia meticulously planned her science project. Her organized approach allowed her to manage time efficiently and deliver outstanding results."
+},
+{
+number: 37,
+title:"The Bold Experimenter",
+image:"https://source.unsplash.com/400x300/?experiment,creative",
+shortDesc:"Taking risks leads to growth.",
+fullDesc:"Oliver tried an unusual method for his experiment. Though risky, it worked perfectly and taught him that bold choices can lead to big rewards."
+},
+{
+number: 38,
+title:"The Knowledge Seeker",
+image:"https://source.unsplash.com/400x300/?knowledge,learning",
+shortDesc:"Curiosity drives success.",
+fullDesc:"Lily always asked questions and explored beyond what was taught. Her curiosity helped her discover new solutions that others overlooked."
+},
+{
+number: 39,
+title:"The Patient Student",
+image:"https://source.unsplash.com/400x300/?patience,study",
+shortDesc:"Slow and steady wins.",
+fullDesc:"Max struggled with math at first. Through patience and continuous practice, he gradually mastered concepts that once seemed impossible."
+},
+{
+number: 40,
+title:"The Inspiring Mind",
+image:"https://source.unsplash.com/400x300/?inspiration,ideas",
+shortDesc:"Inspiration can change everything.",
+fullDesc:"Emma’s unique approach to problem-solving inspired her classmates. Her innovative thinking became a model for the class and motivated others to try new ideas."
+}
+);
+function renderStories(){
+const container = document.getElementById("stories");
+container.innerHTML = "";
+storyData.forEach((story)=>{
+container.innerHTML += `
+<div class="story">
+<h2>${story.number}. ${story.title}</h2>
+<img src="${story.image}" onerror="this.src='https://via.placeholder.com/400x200'">
+<p>${story.shortDesc}</p>
+<p class="full">${story.fullDesc}</p>
+<button onclick="toggle(this)">Read More</button>
+</div>
+`;
 });
+}
 
-// Toggle function for Read More buttons
 function toggle(btn){
-  const fullText = btn.previousElementSibling;
-  if(fullText.style.display === "block"){
-    fullText.style.display = "none";
-    btn.innerText = "Read More";
-  }else{
-    fullText.style.display = "block";
-    btn.innerText = "Read Less";
-  }
+let full = btn.previousElementSibling;
+if(full.style.display === "block"){
+full.style.display = "none";
+btn.innerText = "Read More";
+}else{
+full.style.display = "block";
+btn.innerText = "Read Less";
+}
 }
 
-// Search function
 function searchStories(){
-  const input = document.getElementById("search").value.toLowerCase();
-  const stories = document.getElementsByClassName("story");
-  for(let i=0;i<stories.length;i++){
-    const text = stories[i].innerText.toLowerCase();
-    stories[i].style.display = text.includes(input) ? "block" : "none";
-  }
+let input = document.getElementById("search").value.toLowerCase();
+let stories = document.getElementsByClassName("story");
+for(let i=0;i<stories.length;i++){
+let text = stories[i].innerText.toLowerCase();
+stories[i].style.display = text.includes(input) ? "block" : "none";
 }
-</script>
+}
 
-</div>
-</div>
+renderStories();
+</script>
 
 </body>
 </html>
