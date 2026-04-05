@@ -105,6 +105,36 @@ for (let btn of categoryButtons) {
   });
 }
 </script>
+<script>
+function toggle(btn){
+  let full = btn.previousElementSibling;
 
+  if(full.style.display === "none"){
+    full.style.display = "block";
+    btn.innerText = "Read Less";
+  } else {
+    full.style.display = "none";
+    btn.innerText = "Read More";
+  }
+}
+</script>
+
+</body>
+<script>
+function toggle(btn){
+  let full = btn.previousElementSibling;
+
+  if(full.style.display === "none"){
+    full.style.display = "block";
+    btn.innerText = "Read Less";
+  } else {
+    full.style.display = "none";
+    btn.innerText = "Read More";
+  }
+}
+</script>
+
+</body>
+</html>
 </body>
   </html>
